@@ -10,7 +10,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['openDetails'])
+const emit = defineEmits(['open-details', 'openDetails'])
 
 // Format status tags with appropriate colors
 const getStatusClasses = (status) => {
@@ -28,7 +28,7 @@ const getStatusClasses = (status) => {
 </script>
 
 <template>
-  <div class="group cyber-card flex flex-col overflow-hidden h-full cursor-pointer hover:border-cyber-violet/30 transition-all duration-300" @click="emit('openDetails', project)">
+  <div class="group cyber-card flex flex-col overflow-hidden h-full cursor-pointer hover:border-cyber-violet/30 transition-all duration-300" @click="emit('open-details', project)">
     <!-- Image Header Frame -->
     <div class="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
       <!-- Project Cover image -->
