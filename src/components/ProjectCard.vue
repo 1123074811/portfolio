@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
-import { ExternalLink, Github, Sparkles, CheckCircle2, FlaskConical } from 'lucide-vue-next'
+import { ExternalLink, Github, Sparkles, CheckCircle2, FlaskConical, Play, Image } from 'lucide-vue-next'
 import { locale, translations } from '../data/locale'
 
 const props = defineProps({
@@ -59,6 +59,20 @@ const getStatusClasses = (status) => {
             ]"
           ></span>
           <span>{{ locale === 'zh' ? project.status : project.statusEn }}</span>
+        </span>
+      </div>
+
+      <!-- Media Type indicator (bottom-right of image) -->
+      <div v-if="project.media && project.media.length > 1" class="absolute bottom-3 right-3 z-10 bg-slate-950/70 border border-white/10 text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm shadow flex items-center space-x-1 pointer-events-none">
+        <!-- If has video -->
+        <span v-if="project.media.some(m => m.type === 'video')" class="flex items-center space-x-1">
+          <Play class="w-2.5 h-2.5 fill-white text-white" />
+          <span>VIDEO</span>
+        </span>
+        <!-- Else if has multiple images -->
+        <span v-else class="flex items-center space-x-1">
+          <Image class="w-2.5 h-2.5 text-white" />
+          <span>{{ project.media.length }} IMAGES</span>
         </span>
       </div>
     </div>

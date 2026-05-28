@@ -3,16 +3,13 @@ import { ref, computed, watch } from 'vue'
 import { portfolioData } from '../data/portfolioData'
 import ProjectCard from './ProjectCard.vue'
 import ProjectFilter from './ProjectFilter.vue'
-import ProjectModal from './ProjectModal.vue'
 import { Sparkles, Compass } from 'lucide-vue-next'
-import { locale, translations } from '../data/locale'
+import { locale, translations, openProjectDetails } from '../data/locale'
 
 const projects = portfolioData.projects
 const categories = computed(() => locale.value === 'zh' ? portfolioData.categories : portfolioData.categoriesEn)
 
 const activeCategory = ref('全部')
-const selectedProject = ref(null)
-const isModalOpen = ref(false)
 
 // Sync activeCategory when locale changes
 watch(locale, (newVal) => {
@@ -32,11 +29,6 @@ const filteredProjects = computed(() => {
 
 const changeCategory = (cat) => {
   activeCategory.value = cat
-}
-
-const openProjectModal = (project) => {
-  selectedProject.value = project
-  isModalOpen.value = true
 }
 </script>
 
@@ -76,7 +68,7 @@ const openProjectModal = (project) => {
           :key="project.id"
           class="transition-all duration-300 transform"
         >
-          <ProjectCard :project="project" @open-details="openProjectModal" />
+          <ProjectCard :project="project" @open-details="openProjectDetails" />
         </div>
       </div>
 
@@ -99,12 +91,5 @@ const openProjectModal = (project) => {
       </div>
 
     </div>
-
-    <!-- Detailed Project Popup Modal -->
-    <ProjectModal 
-      :project="selectedProject" 
-      :is-open="isModalOpen" 
-      @close="isModalOpen = false" 
-    />
   </section>
 </template>

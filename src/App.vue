@@ -8,6 +8,8 @@ import BlogSection from './components/BlogSection.vue'
 import ExperienceSection from './components/ExperienceSection.vue'
 import ContactSection from './components/ContactSection.vue'
 import Footer from './components/Footer.vue'
+import ProjectDetailsPage from './components/ProjectDetailsPage.vue'
+import { currentProject } from './data/locale'
 </script>
 
 <template>
@@ -19,20 +21,26 @@ import Footer from './components/Footer.vue'
     <!-- Main Content Sections -->
     <main class="flex-1 w-full relative">
       
-      <!-- Anchor references for global jump navigation -->
-      <HeroSection id="hero" />
-      
-      <AboutSection id="about" />
-      
-      <ProjectSection id="projects" />
-      
-      <SkillsSection id="skills" />
-      
-      <BlogSection id="blog" />
-      
-      <ExperienceSection id="experience" />
-      
-      <ContactSection id="contact" />
+      <!-- Standalone Project Details Page View -->
+      <ProjectDetailsPage v-if="currentProject" :project="currentProject" />
+
+      <!-- Landing Page Multi-Section View -->
+      <div v-else>
+        <!-- Anchor references for global jump navigation -->
+        <HeroSection id="hero" />
+        
+        <AboutSection id="about" />
+        
+        <ProjectSection id="projects" />
+        
+        <SkillsSection id="skills" />
+        
+        <BlogSection id="blog" />
+        
+        <ExperienceSection id="experience" />
+        
+        <ContactSection id="contact" />
+      </div>
       
     </main>
 

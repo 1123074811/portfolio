@@ -42,7 +42,7 @@ export const portfolioData = {
         id: "ai",
         title: "AI 应用探索",
         titleEn: "AI App Exploration",
-        description: "关注 AI Agent、检索增强生成 (RAG)、智能工作流。能独立对接各种大模型 API，进行 Prompt 调优 and 工程落地。",
+        description: "关注 AI Agent、检索增强生成 (RAG)、智能工作流。能独立对接各种大模型 API，进行 Prompt 调优与工程落地。",
         descriptionEn: "Focus on AI Agents, Retrieval-Augmented Generation (RAG), and smart pipelines. Capable of integrating various LLM APIs and prompt tuning.",
         icon: "Bot"
       },
@@ -87,7 +87,22 @@ export const portfolioData = {
       categoryEn: "AI Apps",
       description: "一个面向开发者的智能工具，用户只需输入一段大白话想法（例如：我想做一个拼车小程序），AI 就会在几秒钟内将其拆解为软件架构图、数据库关系、推荐的技术栈及分阶段开发计划，并生成基础的后端代码模板。",
       descriptionEn: "A developer co-pilot: users input simple, plain-text ideas (e.g. 'I want to build a carpooling app'). In seconds, the AI parses it into architectural blocks, relational databases, recommended tech stacks, and modular development sprint tasks, together with clean boilerplate code.",
-      coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop", // Abstract creative purple/blue art
+      coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop", // Futuristic colorful AI head
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-animation-of-futuristic-devices-and-hud-indicators-41617-large.mp4",
+          poster: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1677442136019-21780efad99a?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1508873535684-277a3cbcc4e8?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
       techStack: ["Vue 3", "Tailwind CSS", "Node.js", "OpenAI API", "LangChain"],
       features: [
         "一句话灵感智能拆解，生成交互式敏捷看板与甘特图",
@@ -126,9 +141,24 @@ export const portfolioData = {
       subtitleEn: "Modern collaborative Kanban with integrated AI Code Review",
       category: "Web 全栈",
       categoryEn: "Fullstack",
-      description: "基于前后端分离架构实现的研发任务管理平台。除常规的拖轴卡片和敏捷看板外，最大亮点是集成了 AI Code Reviewer 插件，当开发者将任务状态拖拽至“待审查”时，AI 会自动扫描关联的 Git 提交并指出潜在的安全和性能隐患。",
+      description: "基于前后端分离架构实现的研发任务管理平台。除常规的拖轴卡片与敏捷看板外，最大亮点是集成了 AI Code Reviewer 插件，当开发者将任务状态拖拽至“待审查”时，AI 会自动扫描关联的 Git 提交并指出潜在的安全和性能隐患。",
       descriptionEn: "A high-performance Kanban platform. Along with normal cards and boards, its biggest highlight is the integrated AI Code Reviewer. When developers drag tasks to 'Reviewing', the AI automated agent audits the associated Git commits and detects potential bugs and performance risks.",
-      coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=600&auto=format&fit=crop", // Code editor on dark screen
+      coverImage: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop", // Cyberpunk glowing workstation
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-terminal-with-scrolling-green-code-and-data-48866-large.mp4",
+          poster: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
       techStack: ["Vue 3", "Tailwind CSS", "Spring Boot", "MySQL", "Redis", "JWT"],
       features: [
         "拖拽式响应画布，看板无缝切换（待办、开发中、待审查、已完成）",
@@ -160,6 +190,118 @@ export const portfolioData = {
       featured: true
     },
     {
+      id: "vibeclip",
+      title: "VibeClip - 智能云端剪贴板",
+      titleEn: "VibeClip - Smart Clipboard Hub",
+      subtitle: "支持多端同步、文本历史分类与大模型智能润色的剪贴板管家",
+      subtitleEn: "Multi-device cloud syncing, smart categorization, and LLM-assisted rewriting",
+      category: "效率工具",
+      categoryEn: "Tools",
+      description: "一个专为现代研发工作流设计的剪贴板管理工具。它不仅能在后台静默运行并记录你的复制历史，还能通过云端安全同步到你的手机与其它电脑。最棒的是它整合了 DeepSeek API，支持选中内容一键进行 AI 代码解释、翻译、周报润色或格式化。",
+      descriptionEn: "A clipboard workflow companion built for modern developers. It silently captures copy history, encrypting and syncing data securely across all your devices. Best of all, it has built-in DeepSeek API integrations for instant AI code explanation, smart text polishing, translation, and JSON formatting.",
+      coverImage: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=800&auto=format&fit=crop",
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-woman-working-on-a-futuristic-tablet-and-hologram-42517-large.mp4",
+          poster: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "Electron", "Tailwind CSS", "Node.js", "SQLite", "DeepSeek API"],
+      features: [
+        "系统级热键唤醒，历史记录智能合并与正则全文检索",
+        "AI 智能助理侧边栏，支持一键解释代码、翻译和摘要",
+        "端到端加密云同步，支持多台 PC 与手机端实时同步剪贴历史"
+      ],
+      featuresEn: [
+        "System-wide global hotkey summoning, with regex-enabled fuzzy search",
+        "Integrated AI Assistant sidebar for code optimization and auto-documentation",
+        "End-to-end encrypted cloud sync to synchronize clips securely across active devices"
+      ],
+      highlights: [
+        "基于 Electron + SQLite 实现了百万级文本数据毫秒级本地读写",
+        "采用最少特权原则进行系统集成，对剪贴板数据实行完全的本地隔离与加密",
+        "通过 SSE 流式输出技术，在大模型润色时实现低延迟、丝滑的打字机加载效果"
+      ],
+      highlightsEn: [
+        "Wired Electron with SQLite to achieve sub-millisecond local reads across 1M+ logs",
+        "Adhered to Principle of Least Privilege, isolating and encrypting sensitive user entries",
+        "Implemented Server-Sent Events (SSE) to render responsive, lag-free typewriter typing"
+      ],
+      role: "独立负责产品原型设计、Electron 桌面客户端壳体及主进程开发、SQLite 本地缓存设计以及 AI API 接口对接。",
+      roleEn: "Independently designed product roadmap, coded Electron wrapper & main processes, established local DB layers, and tuned LLM completion pipelines.",
+      demoUrl: "#",
+      sourceUrl: "https://github.com/vibe-coder/vibeclip",
+      status: "持续迭代",
+      statusEn: "Active",
+      year: "2026",
+      featured: true
+    },
+    {
+      id: "ragflowlite",
+      title: "RAGFlow-Lite - 轻量级个人知识库",
+      titleEn: "RAGFlow-Lite - Personal RAG Hub",
+      subtitle: "基于 RAG 架构的多文档智能问答与语义搜索工作台",
+      subtitleEn: "Document Retrieval-Augmented Generation dashboard and semantics engine",
+      category: "AI 应用",
+      categoryEn: "AI Apps",
+      description: "一个面向学生和学者的本地轻量级知识库工具。用户可以上传 PDF、Markdown、DOCX 等多种格式的文档。系统会自动进行文本分块（Chunking）、生成向量嵌入（Embeddings）并存入本地向量数据库。此后，用户可以通过自然语言与本地文档进行高精度对话，每条回答都会严格附带原文引用出处。",
+      descriptionEn: "A desktop-friendly knowledge-base tool for researchers and developers. Drag and drop PDFs, Markdowns, or Word files to automatically trigger smart text-chunking and vector storage (Chroma). Chat with your local database in natural language, with strict factual citations and source reference tracking.",
+      coverImage: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=800&auto=format&fit=crop",
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-of-a-holographic-brain-scanning-43034-large.mp4",
+          poster: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "FastAPI", "Python", "ChromaDB", "LangChain", "HuggingFace"],
+      features: [
+        "智能 PDF/Word 文档分块解析，自研重叠滑动窗口（Sliding Window）切片算法",
+        "支持本地离线模型（如 Ollama）或在线 API（OpenAI / DeepSeek）的混合检索（Hybrid Search）",
+        "可视化向量空间，能在大地图中直观查看文档块之间的关联和检索距离"
+      ],
+      featuresEn: [
+        "Automated PDF/Word parsing with dynamic sliding-window slicing algorithms",
+        "Hybrid search ranking supported by local LLMs (Ollama) or external web APIs (OpenAI)",
+        "Interactive vector map displaying physical distances and relationships between chunks"
+      ],
+      highlights: [
+        "自研 BM25 传统文本检索与 Dense Vector 向量检索的重排（Rerank）融合算法，多文档检索召回率提升 40%",
+        "利用 FastAPI 异步非阻塞特性，配合 Redis 队列实现了高效的文档批量并发入库与多线程解析",
+        "前端使用 Canvas 渲染海量向量文档块分布，提供炫酷且流畅的语义拓扑网络交互"
+      ],
+      highlightsEn: [
+        "Engineered a hybrid ranking logic fusing BM25 keyword matching with Dense Vector vectors, boosting recall rate by 40%",
+        "Leveraged FastAPI asynchronous workers and Redis queuing to run parallel vector embeddings pipeline",
+        "Designed Canvas network renderers to visualize thousands of token clusters in real-time"
+      ],
+      role: "负责 Python FastAPI 后端架构搭建、LangChain 检索管道设计、BM25 + 向量召回重排融合算法实现、以及前端可视化检索界面开发。",
+      roleEn: "Led FastAPI design, engineered LangChain document pipelines, coded BM25 + dense reranking, and built interactive HTML5 Canvas topology.",
+      demoUrl: "https://raglite.demo.dev",
+      sourceUrl: "#",
+      status: "已完成",
+      statusEn: "Completed",
+      year: "2025",
+      featured: true
+    },
+    {
       id: "omniprompt",
       title: "OmniPrompt - 提示词调试工作台",
       titleEn: "OmniPrompt - Prompt Sandbox",
@@ -167,9 +309,24 @@ export const portfolioData = {
       subtitleEn: "Version-controlled template playground with token estimation",
       category: "效率工具",
       categoryEn: "Tools",
-      description: "旨在解决大模型开发中 Prompt 版本混乱、测试不便的痛点。该工作台支持用户编写带变量的 Prompt 模板（如：你好，我是一名 {{role}}），输入测试参数后自动组装并调用多路大模型（ChatGPT/Claude/DeepSeek 等）对比效果，并实时估算 Token 消耗和费用成本。",
+      description: "旨在解决大模型开发中 Prompt 版本混乱、测试不便的痛点。该工作台支持用户编写带变量的 Prompt 模板（如：你好，我是一名 {{role}}），输入测试参数后自动组装并调用多路大模型（ChatGPT/Claude/DeepSeek 等）对比效果，并实时估算 Token 消耗与费用成本。",
       descriptionEn: "Built to solve version-control and testing friction in Prompt engineering. Users can write modular, parameterized templates (e.g., 'Hello, I am a {{role}}'), fill variables, run parallel evaluations across OpenAI/Claude/DeepSeek, and view instantaneous token/cost estimates.",
-      coverImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop", // Binary cyan background
+      coverImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop", // Quantum energy field
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34281-large.mp4",
+          poster: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
       techStack: ["Vue 3", "Tailwind CSS", "Vite", "Tiktoken-JS", "HuggingFace API"],
       features: [
         "Prompt 模板热重载，支持多模型输出同屏横向评测",
@@ -210,7 +367,22 @@ export const portfolioData = {
       categoryEn: "Labs",
       description: "这是一场 Vibe Coding 的灵感实验。利用浏览器摄像头捕捉用户的人脸姿态与眨眼，在 Canvas 舞台上产生流光溢彩的视觉粒子，同时根据人脸偏移产生对应的环境和弦与音效。将视觉、音乐与深度学习相结合，为访客提供解压有趣的艺术交互。",
       descriptionEn: "A creative art sandbox born from a pure Vibe Coding spark. Uses deep-learning models in browser to capture webcam facial posture and blinks, generating streaming color particles on HTML5 Canvas while synthesizing background ambient chords in real-time.",
-      coverImage: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?q=80&w=600&auto=format&fit=crop", // Piano keys or colorful lights
+      coverImage: "https://images.unsplash.com/photo-1552422535-c45813c61732?q=80&w=800&auto=format&fit=crop", // Synth keys and laser
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-dj-mixer-controller-under-neon-flashing-lights-42861-large.mp4",
+          poster: "https://images.unsplash.com/photo-1552422535-c45813c61732?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-neon-fluid-shapes-swirling-32520-large.mp4"
+        }
+      ],
       techStack: ["Vue 3", "Tailwind CSS", "HTML5 Canvas", "MediaPipe", "Tone.js"],
       features: [
         "人脸姿态特征实时解算（眨眼、转头、咧嘴等动作映射为音符触发）",

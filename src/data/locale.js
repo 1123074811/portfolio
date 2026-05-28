@@ -1,10 +1,24 @@
 import { ref } from 'vue'
 
 export const locale = ref(localStorage.getItem('locale') || 'zh')
+export const currentProject = ref(null)
 
 export const toggleLocale = () => {
   locale.value = locale.value === 'zh' ? 'en' : 'zh'
   localStorage.setItem('locale', locale.value)
+}
+
+export const openProjectDetails = (project) => {
+  currentProject.value = project
+  window.scrollTo({ top: 0, behavior: 'instant' })
+}
+
+export const closeProjectDetails = () => {
+  currentProject.value = null
+  setTimeout(() => {
+    const el = document.getElementById('projects')
+    if (el) el.scrollIntoView({ behavior: 'instant' })
+  }, 50)
 }
 
 export const translations = {

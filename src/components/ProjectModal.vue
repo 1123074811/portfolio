@@ -1,6 +1,6 @@
 <script setup>
-import { defineProps, defineEmits, onMounted, onUnmounted, watch } from 'vue'
-import { X, ExternalLink, Github, Sparkles, CheckCircle2, User, Calendar, Tag, Layers } from 'lucide-vue-next'
+import { defineProps, defineEmits, onMounted, onUnmounted, watch, ref, computed } from 'vue'
+import { X, ExternalLink, Github, Sparkles, CheckCircle2, User, Calendar, Tag, Layers, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { locale, translations } from '../data/locale'
 
 const props = defineProps({
@@ -16,6 +16,46 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
+const currentMediaIndex = ref(0)
+
+// Reset index when the project changes or modal opens
+watch(() => props.project, () => {
+  currentMediaIndex.value = 0
+})
+
+watch(() => props.isOpen, (newVal) => {
+  if (newVal) {
+    document.body.style.overflow = 'hidden'
+    currentMediaIndex.value = 0
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
+const projectMedia = computed(() => {
+  if (props.project && props.project.media && props.project.media.length > 0) {
+    return props.project.media
+  }
+  return props.project ? [
+    {
+      type: 'image',
+      url: props.project.coverImage || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop'
+    }
+  ] : []
+})
+
+const nextMedia = () => {
+  currentMediaIndex.value = (currentMediaIndex.value + 1) % projectMedia.value.length
+}
+
+const prevMedia = () => {
+  currentMediaIndex.value = (currentMediaIndex.value - 1 + projectMedia.value.length) % projectMedia.value.length
+}
+
+const setMedia = (index) => {
+  currentMediaIndex.value = index
+}
+
 const handleClose = () => {
   emit('close')
 }
@@ -26,15 +66,6 @@ const handleKeyDown = (e) => {
     handleClose()
   }
 }
-
-// Lock/unlock body scroll when modal opens/closes
-watch(() => props.isOpen, (newVal) => {
-  if (newVal) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
-})
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
@@ -63,18 +94,43 @@ onUnmounted(() => {
       <!-- Modal Container -->
       <div class="relative bg-white dark:bg-cyber-card max-w-3xl w-full rounded-2xl shadow-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200 text-left">
         
-        <!-- Header Image area -->
-        <div class="relative aspect-[21/9] w-full bg-slate-900 flex-shrink-0">
-          <img 
-            :src="project.coverImage" 
-            :alt="locale === 'zh' ? project.title + ' 详细封面' : project.titleEn + ' details cover'"
-            class="w-full h-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
+        <!-- Header Image area (Carousel with Video Support) -->
+        <div class="relative aspect-[21/9] w-full bg-slate-900 flex-shrink-0 group select-none">
+          
+          <!-- Media Container -->
+          <div class="w-full h-full">
+            <!-- Image Slide -->
+            <div v-if="projectMedia[currentMediaIndex].type === 'image'" class="w-full h-full relative">
+              <img 
+                :key="'img-modal-' + currentMediaIndex"
+                :src="projectMedia[currentMediaIndex].url" 
+                :alt="locale === 'zh' ? project.title + ' 详细图片' : project.titleEn + ' details media'"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            
+            <!-- Video Slide -->
+            <div v-else-if="projectMedia[currentMediaIndex].type === 'video'" class="w-full h-full relative">
+              <video 
+                :key="'vid-modal-' + currentMediaIndex"
+                :src="projectMedia[currentMediaIndex].url"
+                :poster="projectMedia[currentMediaIndex].poster || project.coverImage"
+                controls
+                autoplay
+                muted
+                loop
+                playsinline
+                class="w-full h-full object-cover"
+              ></video>
+            </div>
+          </div>
+
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>
           
           <!-- Category & Status Badge Overlay -->
-          <div class="absolute bottom-4 left-6 right-6 flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center space-x-2">
+          <div class="absolute bottom-4 left-6 right-6 flex items-center justify-between flex-wrap gap-2 z-10 pointer-events-none">
+            <div class="flex items-center space-x-2 pointer-events-auto">
               <span class="text-xs font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-cyber-violet/80 text-white border border-cyber-violet/30">
                 {{ locale === 'zh' ? project.category : project.categoryEn }}
               </span>
@@ -83,18 +139,61 @@ onUnmounted(() => {
               </span>
             </div>
             
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/15 text-white border border-white/10 backdrop-blur-md">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/15 text-white border border-white/10 backdrop-blur-md pointer-events-auto">
               {{ locale === 'zh' ? project.status : project.statusEn }}
             </span>
+          </div>
+
+          <!-- Carousel Navigation Arrows -->
+          <div v-if="projectMedia.length > 1" class="absolute inset-y-0 inset-x-4 flex items-center justify-between pointer-events-none">
+            <button 
+              @click="prevMedia"
+              class="p-1.5 rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/60 border border-white/10 backdrop-blur-sm transition-all shadow-md active:scale-90 pointer-events-auto cursor-pointer"
+              :title="locale === 'zh' ? '上一个' : 'Previous'"
+            >
+              <ChevronLeft class="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+            <button 
+              @click="nextMedia"
+              class="p-1.5 rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/60 border border-white/10 backdrop-blur-sm transition-all shadow-md active:scale-90 pointer-events-auto cursor-pointer"
+              :title="locale === 'zh' ? '下一个' : 'Next'"
+            >
+              <ChevronRight class="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
+
+          <!-- Carousel Dot Indicators / Badges -->
+          <div v-if="projectMedia.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 z-10 bg-black/30 px-2.5 py-1 rounded-full backdrop-blur-md border border-white/5">
+            <button 
+              v-for="(media, idx) in projectMedia" 
+              :key="idx"
+              @click="setMedia(idx)"
+              class="w-2 h-2 rounded-full transition-all duration-300"
+              :class="[
+                idx === currentMediaIndex 
+                  ? 'bg-cyber-cyan scale-110 shadow-sm shadow-cyber-cyan' 
+                  : 'bg-white/40 hover:bg-white/70'
+              ]"
+              :title="(locale === 'zh' ? '媒体 ' : 'Media ') + (idx + 1)"
+            ></button>
+          </div>
+
+          <!-- Media Type Badge in corner -->
+          <div v-if="projectMedia.length > 1" class="absolute top-4 left-4 z-10 bg-slate-900/80 backdrop-blur-md text-white border border-white/10 text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded shadow-md flex items-center space-x-1">
+            <span v-if="projectMedia[currentMediaIndex].type === 'video'" class="flex items-center space-x-1">
+              <span class="w-1 h-1 rounded-full bg-red-500 animate-pulse"></span>
+              <span>VIDEO</span>
+            </span>
+            <span v-else>IMAGE {{ currentMediaIndex + 1 }}/{{ projectMedia.length }}</span>
           </div>
 
           <!-- Close Button -->
           <button 
             @click="handleClose" 
-            class="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/70 transition-colors shadow-md border border-white/10"
+            class="absolute top-4 right-4 p-1.5 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/70 transition-colors shadow-md border border-white/10 z-20"
             aria-label="关闭详情"
           >
-            <X class="w-5 h-5" />
+            <X class="w-4 h-4" />
           </button>
         </div>
 
