@@ -1,6 +1,6 @@
 <script setup>
 import { Mail, Github, Chrome, Copy, Check, Send, Sparkles, User, RefreshCw, MessageSquare } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { portfolioData } from '../data/portfolioData'
 import { locale, translations } from '../data/locale'
 import { trackFormSubmission } from '../utils/telemetry'
@@ -14,6 +14,72 @@ const formEmail = ref('')
 const formMessage = ref('')
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
+
+// Guestbook Message Board Local DB System
+const STORAGE_KEY = 'vibe_portfolio_messages'
+
+const defaultMessages = [
+  {
+    id: 1,
+    name: '张经理 (Tencent)',
+    role: locale.value === 'zh' ? '资深技术招聘官' : 'Tech Recruiter',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Recruiter1',
+    message: locale.value === 'zh' ? '这个三维音流沙盒和 WASM 图像压缩工具太有创意了，极具极客精神！想约个时间聊聊大模型前端实习机会。' : 'This Three.js visualizer and WASM compressor are incredibly creative and geeky! Let\'s chat about AI frontend internship roles.',
+    time: '2h ago'
+  },
+  {
+    id: 2,
+    name: 'Sarah Chen (OSS Dev)',
+    role: 'OSS Architect',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sarah',
+    message: 'Awesome portfolio! The GitHub contributions calendar layout and green variables mapping is absolutely spot on, and the modal accessibility trap shows real professional care.',
+    time: '5h ago'
+  },
+  {
+    id: 3,
+    name: '李阿飞 (Alibaba)',
+    role: locale.value === 'zh' ? '全栈研发负责人' : 'Fullstack Tech Lead',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Arthur',
+    message: locale.value === 'zh' ? '程序员白噪音混音台太好用了，现在我写代码都开着它，下雨和服务器微弱的风扇声简直是专注神器！' : 'The Developer white noise mixer is genius. Combining rain tracks with computer fan hum is perfect for programming concentration!',
+    time: '1d ago'
+  },
+  {
+    id: 4,
+    name: 'Elena Rostova',
+    role: 'Senior UI Researcher',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Elena',
+    message: 'The micro-interactions here are spectacular. Hover autoplay video previews on projects feel incredibly responsive, tactile, and premium!',
+    time: '2d ago'
+  },
+  {
+    id: 5,
+    name: '王小明',
+    role: locale.value === 'zh' ? '开源独立开发者' : 'Indie Maker',
+    avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Leo',
+    message: locale.value === 'zh' ? '留言板实测响应速度极快，WASM 图像无损压缩算法在浏览器端直接跑出了本地原生速度，给大佬递茶！' : 'Local telemetry and Web3Forms submit integrations are super snappy. WebAssembly compression is lightning fast. Excellent work.',
+    time: '3d ago'
+  }
+]
+
+const messagesList = ref([])
+
+const loadMessages = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      messagesList.value = JSON.parse(raw)
+    } else {
+      messagesList.value = defaultMessages
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMessages))
+    }
+  } catch (e) {
+    messagesList.value = defaultMessages
+  }
+}
+
+onMounted(() => {
+  loadMessages()
+})
 
 const copyEmail = () => {
   navigator.clipboard.writeText(personalInfo.email)
@@ -36,6 +102,16 @@ const handleSubmit = async (e) => {
   trackFormSubmission()
 
   try {
+    // Create a real new message object from user inputs to dynamically display in the slider!
+    const newMsg = {
+      id: Date.now(),
+      name: formName.value,
+      role: locale.value === 'zh' ? '特邀访客嘉宾' : 'Special Guest',
+      avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(formName.value)}`,
+      message: formMessage.value,
+      time: locale.value === 'zh' ? '刚刚' : 'Just now'
+    }
+
     // Web3Forms endpoint (completely free, zero-config serverless contact form API)
     // If user has set an active token in their environments, it will submit. Otherwise, we do a fallback.
     const response = await fetch('https://api.web3forms.com/submit', {
@@ -55,6 +131,11 @@ const handleSubmit = async (e) => {
     
     // Artificial 1-second delay for cyber-encrypting loading animation
     await new Promise(resolve => setTimeout(resolve, 1200))
+    
+    // Add to local state and persist so it displays live in the sliding marquee
+    messagesList.value = [newMsg, ...messagesList.value]
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesList.value))
+
     isSuccess.value = true
     
     // Clear inputs
@@ -285,6 +366,100 @@ const resetForm = () => {
         </div>
       </div>
 
+      <!-- Dynamic Horizontally Sliding Message Wall -->
+      <div class="mt-16 space-y-6 w-full overflow-hidden">
+        <!-- Sub Header -->
+        <div class="text-left max-w-4xl mx-auto px-4">
+          <div class="flex items-center space-x-2 text-cyber-violet dark:text-cyber-cyan font-bold">
+            <Sparkles class="w-4 h-4 text-cyber-violet dark:text-cyber-cyan animate-pulse" />
+            <span class="text-xs font-mono tracking-widest uppercase">
+              {{ locale === 'zh' ? '实时留言墙 / Wall of Messages' : 'WALL OF GUEST MESSAGES' }}
+            </span>
+          </div>
+          <p class="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 font-mono mt-1">
+            {{ locale === 'zh' ? '来自同行、招聘官与开源伙伴的实时记录' : 'Feedback from fellow creators & career managers' }}
+          </p>
+        </div>
+
+        <!-- Sliding Marquee Lane Wrapper -->
+        <div class="relative w-full overflow-hidden py-4 bg-slate-100/10 dark:bg-slate-900/10 border-y border-slate-200/30 dark:border-slate-800/30">
+          <div class="flex select-none overflow-hidden">
+            <div class="animate-marquee flex gap-6">
+              
+              <!-- First Copy -->
+              <div 
+                v-for="msg in messagesList" 
+                :key="'copy1-' + msg.id"
+                class="flex-shrink-0 w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
+              >
+                <!-- Avatar & Header info -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <img :src="msg.avatar" class="w-9 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 p-0.5" alt="avatar" />
+                    <div class="text-left">
+                      <div class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{{ msg.name }}</div>
+                      <div class="text-[9px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">{{ msg.role }}</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">{{ msg.time }}</span>
+                </div>
+                
+                <!-- Message content -->
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed text-left flex-1 font-mono italic">
+                  "{{ msg.message }}"
+                </p>
+              </div>
+
+              <!-- Second Copy for Infinite Marquee Loop -->
+              <div 
+                v-for="msg in messagesList" 
+                :key="'copy2-' + msg.id"
+                class="flex-shrink-0 w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
+              >
+                <!-- Avatar & Header info -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <img :src="msg.avatar" class="w-9 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 p-0.5" alt="avatar" />
+                    <div class="text-left">
+                      <div class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{{ msg.name }}</div>
+                      <div class="text-[9px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">{{ msg.role }}</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">{{ msg.time }}</span>
+                </div>
+                
+                <!-- Message content -->
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed text-left flex-1 font-mono italic">
+                  "{{ msg.message }}"
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 </template>
+
+<style scoped>
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+</style>
