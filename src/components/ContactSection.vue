@@ -1,6 +1,6 @@
 <script setup>
 import { Mail, Github, Chrome, Copy, Check, Send, Sparkles, User, RefreshCw, MessageSquare } from 'lucide-vue-next'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { portfolioData } from '../data/portfolioData'
 import { locale, translations } from '../data/locale'
 import { trackFormSubmission } from '../utils/telemetry'
@@ -8,12 +8,19 @@ import { trackFormSubmission } from '../utils/telemetry'
 const personalInfo = portfolioData.personalInfo
 const copied = ref(false)
 
-// Form states
+// Form states - Preloaded from localStorage for guest convenience
 const formName = ref('')
-const formEmail = ref('')
+const formRole = ref('')
+const formAvatarSeed = ref('')
 const formMessage = ref('')
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
+
+// Live avatar preview using Dicebear Adventurer style
+const avatarPreviewUrl = computed(() => {
+  const seed = encodeURIComponent(formAvatarSeed.value || formName.value || 'guest-default')
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`
+})
 
 // Guestbook Message Board Local DB System
 const STORAGE_KEY = 'vibe_portfolio_messages'
@@ -79,6 +86,15 @@ const loadMessages = () => {
 
 onMounted(() => {
   loadMessages()
+  
+  // Safe SSR/Hydration pre-fill from localStorage
+  try {
+    formName.value = localStorage.getItem('vibe_last_guest_name') || ''
+    formRole.value = localStorage.getItem('vibe_last_guest_role') || ''
+    formAvatarSeed.value = localStorage.getItem('vibe_last_guest_avatar_seed') || ''
+  } catch (e) {
+    console.warn('LocalStorage pre-fill failed:', e)
+  }
 })
 
 const copyEmail = () => {
@@ -94,7 +110,7 @@ const handleSubmit = async (e) => {
   // Prevent default form action
   if (e) e.preventDefault()
   
-  if (!formName.value || !formEmail.value || !formMessage.value) {
+  if (!formName.value || !formMessage.value) {
     return
   }
 
@@ -102,13 +118,16 @@ const handleSubmit = async (e) => {
   trackFormSubmission()
 
   try {
+    const finalRole = formRole.value.trim() || (locale.value === 'zh' ? '独立访客' : 'Visitor Guest')
+    const finalAvatarSeed = formAvatarSeed.value.trim() || formName.value.trim() || 'default-seed'
+    
     // Create a real new message object from user inputs to dynamically display in the slider!
     const newMsg = {
       id: Date.now(),
-      name: formName.value,
-      role: locale.value === 'zh' ? '特邀访客嘉宾' : 'Special Guest',
-      avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(formName.value)}`,
-      message: formMessage.value,
+      name: formName.value.trim(),
+      role: finalRole,
+      avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(finalAvatarSeed)}`,
+      message: formMessage.value.trim(),
       time: locale.value === 'zh' ? '刚刚' : 'Just now'
     }
 
@@ -123,9 +142,9 @@ const handleSubmit = async (e) => {
       body: JSON.stringify({
         access_key: "YOUR_WEB3FORMS_ACCESS_KEY_OR_MOCK", // Developer placeholder
         name: formName.value,
-        email: formEmail.value,
+        role: finalRole,
         message: formMessage.value,
-        subject: `New Portfolio Message from ${formName.value}`
+        subject: `New Guestbook Message from ${formName.value}`
       })
     })
     
@@ -136,11 +155,18 @@ const handleSubmit = async (e) => {
     messagesList.value = [newMsg, ...messagesList.value]
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messagesList.value))
 
+    // Persist identity fields in localStorage for the guest's convenience next time
+    try {
+      localStorage.setItem('vibe_last_guest_name', formName.value.trim())
+      localStorage.setItem('vibe_last_guest_role', formRole.value.trim())
+      localStorage.setItem('vibe_last_guest_avatar_seed', formAvatarSeed.value.trim())
+    } catch (err) {
+      console.warn('Could not save identity to localStorage:', err)
+    }
+
     isSuccess.value = true
     
-    // Clear inputs
-    formName.value = ''
-    formEmail.value = ''
+    // Clear ONLY message input. Keep Name, Role, and Avatar Seed pre-filled for user convenience next time!
     formMessage.value = ''
   } catch (error) {
     console.error("Serverless form error, falling back to local simulation:", error)
@@ -276,40 +302,70 @@ const resetForm = () => {
 
               <!-- Interactive Form Fields -->
               <form @submit.prevent="handleSubmit" class="space-y-4 my-2">
-                <!-- Name Row -->
-                <div class="space-y-1">
-                  <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    {{ locale === 'zh' ? '您的尊称 / Your Name' : 'Your Name' }}
-                  </label>
-                  <div class="relative">
+                
+                <!-- Name and Role Row (2-column layout) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Name Column -->
+                  <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      {{ locale === 'zh' ? '您的尊称 / Your Name' : 'Your Name' }}
+                    </label>
                     <input 
                       v-model="formName"
                       type="text" 
                       required
                       placeholder="e.g. Alex"
-                      class="w-full pl-3 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
+                      class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
+                    />
+                  </div>
+
+                  <!-- Role Column -->
+                  <div class="space-y-1">
+                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      {{ locale === 'zh' ? '职位与身份 / Your Role' : 'Your Role (Optional)' }}
+                    </label>
+                    <input 
+                      v-model="formRole"
+                      type="text" 
+                      :placeholder="locale === 'zh' ? '如：前端开发 / 招聘经理' : 'e.g. Frontend Dev / Recruiter'"
+                      class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
                     />
                   </div>
                 </div>
 
-                <!-- Email Row -->
-                <div class="space-y-1">
-                  <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    {{ locale === 'zh' ? '电子邮箱 / Email Address' : 'Email Address' }}
-                  </label>
-                  <input 
-                    v-model="formEmail"
-                    type="email" 
-                    required
-                    placeholder="e.g. alex@company.com"
-                    class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
-                  />
+                <!-- Live Dynamic Avatar Generation Card Row -->
+                <div class="p-3.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-950/20 flex items-center space-x-4">
+                  <!-- Dynamic Avatar Preview -->
+                  <div class="flex-shrink-0 relative group">
+                    <img 
+                      :src="avatarPreviewUrl" 
+                      class="w-12 h-12 rounded-full border-2 border-cyber-violet/40 bg-white dark:bg-slate-900 p-0.5 shadow-md group-hover:scale-105 transition-transform" 
+                      alt="Avatar Preview" 
+                    />
+                    <div class="absolute -bottom-1 -right-1 px-1 rounded bg-cyber-violet text-white text-[7px] font-mono font-bold leading-none scale-90 border border-white dark:border-slate-950 uppercase">
+                      LIVE
+                    </div>
+                  </div>
+                  
+                  <!-- Avatar Seed Input -->
+                  <div class="flex-1 space-y-1">
+                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                      <span>{{ locale === 'zh' ? '头像专属种子 / Custom Avatar Seed' : 'Avatar Seed (Optional)' }}</span>
+                      <span class="text-[8px] text-cyber-cyan font-normal lowercase">adventurer</span>
+                    </label>
+                    <input 
+                      v-model="formAvatarSeed"
+                      type="text" 
+                      :placeholder="locale === 'zh' ? '留空默认（支持任意文本）' : 'Type any text to morph avatar'"
+                      class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all font-mono"
+                    />
+                  </div>
                 </div>
 
                 <!-- Message Row -->
                 <div class="space-y-1">
                   <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    {{ locale === 'zh' ? '详细内容 / Message Context' : 'Message Context' }}
+                    {{ locale === 'zh' ? '留言详细内容 / Message Context' : 'Message Context' }}
                   </label>
                   <textarea 
                     v-model="formMessage"
@@ -323,7 +379,7 @@ const resetForm = () => {
                 <!-- Submit Button -->
                 <button 
                   type="submit"
-                  :disabled="isSubmitting || !formName || !formEmail || !formMessage"
+                  :disabled="isSubmitting || !formName || !formMessage"
                   class="flex items-center justify-center space-x-2 w-full px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-cyber-violet to-cyber-cyan hover:shadow-lg hover:shadow-cyber-violet/10 active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <RefreshCw v-if="isSubmitting" class="w-4 h-4 animate-spin" />
