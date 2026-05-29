@@ -91,7 +91,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-animation-of-futuristic-devices-and-hud-indicators-41617-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
           poster: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -147,7 +147,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-terminal-with-scrolling-green-code-and-data-48866-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
           poster: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -203,7 +203,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-woman-working-on-a-futuristic-tablet-and-hologram-42517-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
           poster: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -259,7 +259,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-of-a-holographic-brain-scanning-43034-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
           poster: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -315,7 +315,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34281-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
           poster: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -371,7 +371,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-dj-mixer-controller-under-neon-flashing-lights-42861-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           poster: "https://images.unsplash.com/photo-1552422535-c45813c61732?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -380,7 +380,7 @@ export const portfolioData = {
         },
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-neon-fluid-shapes-swirling-32520-large.mp4"
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
         }
       ],
       techStack: ["Vue 3", "Tailwind CSS", "HTML5 Canvas", "MediaPipe", "Tone.js"],
@@ -427,7 +427,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-a-corridor-41926-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
           poster: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -479,7 +479,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-neon-fluid-shapes-swirling-32520-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
           poster: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -531,7 +531,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34281-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
           poster: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=800&auto=format&fit=crop"
         },
         {
@@ -583,7 +583,7 @@ export const portfolioData = {
       media: [
         {
           type: "video",
-          url: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-of-a-holographic-brain-scanning-43034-large.mp4",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
           poster: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop"
         },
         {
