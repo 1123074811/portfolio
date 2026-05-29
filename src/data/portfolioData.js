@@ -412,6 +412,214 @@ export const portfolioData = {
       statusEn: "Lab",
       year: "2025",
       featured: false
+    },
+    {
+      id: "cybercompress",
+      title: "CyberCompress - 智能图像无损压缩终端",
+      titleEn: "CyberCompress - Smart WASM Image Compressor",
+      subtitle: "基于 WebAssembly + WebP 的纯客户端多线程图像压缩与格式转换平台",
+      subtitleEn: "Client-side image optimizer with multithreaded Rust-compiled WebAssembly",
+      category: "效率工具",
+      categoryEn: "Tools",
+      description: "专为前端研发和运营设计的无损图像压缩工具。采用 Rust 编写的哈夫曼和色度抽样重算法编译为 WebAssembly，多线程在浏览器后台执行压缩。数据100%留在本地，隐私绝对安全，相比传统 Canvas 压缩提速 5 倍并能减少 80% 图像大小。",
+      descriptionEn: "A high-performance image optimizer for creators and developers. Under the hood, Rust Huffman and chroma subsampling algorithms are compiled into WebAssembly and processed asynchronously in parallel Web Worker threads. No server transfers mean absolute privacy and ultra-fast compressions.",
+      coverImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=800&auto=format&fit=crop", // Server storage racks
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-a-corridor-41926-large.mp4",
+          poster: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "Tailwind CSS", "Rust", "WebAssembly", "Web Workers"],
+      features: [
+        "系统级 WebAssembly 异步并发编译，支持大体积 TIFF、RAW 无损格式直接输入",
+        "支持一键批量处理和自设画质、高帧率动态 GIF 转 APNG、WebP 动态格式",
+        "实时预览对比分屏（Split Screen Slider），直观比较压缩前后的画质差异"
+      ],
+      featuresEn: [
+        "Multi-threaded WASM compilation on Web Workers, parsing RAW and TIFF formats easily",
+        "Supports dynamic custom quality scaling, frame rate adjustments, and batch processing",
+        "Interactive split-screen visual preview slider comparing compressed quality ratios in real-time"
+      ],
+      highlights: [
+        "纯前端应用，摆脱了云端服务器带宽限制，文件处理吞吐率可达 50MB/s 以上",
+        "利用 Canvas API 及 OffscreenCanvas 机制卸载主线程渲染压力，大图操作顺畅滑落",
+        "极简且深邃的科幻风交互终端（Terminal UI），支持快捷拖拽和系统热键复制"
+      ],
+      highlightsEn: [
+        "Zero backend dependencies, bypassing bandwidth bottlenecks with throughputs above 50MB/s",
+        "Employed OffscreenCanvas APIs to optimize GPU thread frames during intensive compressions",
+        "Designed a cyberpunk-themed CLI-like dashboard supporting drag-and-drop actions"
+      ],
+      role: "负责整个工具的设计、使用 Rust 封装并编译 WebAssembly 库、编写多线程 Web Workers 与 Vue 3 进行数据绑定、以及分屏预览 Canvas 实现。",
+      roleEn: "Architected whole product, coded WebAssembly encoders in Rust, integrated Web Workers with Vue, and drew split-screen Canvas slider.",
+      demoUrl: "https://cybercompress.dev",
+      sourceUrl: "https://github.com/vibe-coder/cybercompress",
+      status: "已完成",
+      statusEn: "Completed",
+      year: "2026",
+      featured: false
+    },
+    {
+      id: "spectravibe",
+      title: "SpectraVibe - 三维音流沙盒",
+      titleEn: "SpectraVibe - 3D Particle Visualizer",
+      subtitle: "采用 Three.js + Web Audio API 实现的交互式 3D 音频频谱粒子星云系统",
+      subtitleEn: "Web Audio and Three.js based 3D frequency particle starfield sandbox",
+      category: "创意实验",
+      categoryEn: "Labs",
+      description: "一款将音频频谱数据转化为具有引力和物理斥力的 3D 粒子星云系统。支持电脑麦克风实时声音采集或拖入本地 MP3 文件，通过 Web Audio API 进行傅里叶变换（FFT），并将频率和振幅实时映射为 100,000 个 Three.js 粒子的扩散速度、发光亮度和极彩色泽。",
+      descriptionEn: "An interactive artwork translating sound frequencies into 3D particle nebulas with vector force simulations. Users can record from mic or load custom audio clips. The Web Audio API parses real-time FFT frequency bands, driving the kinetic trajectories, scales, and colors of 100K GPU-rendered WebGL particles.",
+      coverImage: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop", // Abstract futuristic colorful geometric art
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-neon-fluid-shapes-swirling-32520-large.mp4",
+          poster: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "Three.js", "Web Audio API", "GLSL Shaders", "GSAP"],
+      features: [
+        "傅里叶（FFT）高频多通道音流解析，划分低音（Bass）、中音（Mid）、高音（Treble）进行动态力学控制",
+        "使用 GPU 自定义顶点着色器（Vertex Shaders）及片元着色器，渲染十万级粒子并保持 60+ FPS 极限流畅",
+        "支持包括极光、黑洞、引力波、电子脉冲在内的 6 种预设星云拓扑几何形变"
+      ],
+      featuresEn: [
+        "FFT multi-channel signal processing, mapping sub-bass, mid, and highs to dynamic force nodes",
+        "Leveraged custom GLSL vertex and fragment shaders to animate 100K nodes at 60 FPS smoothly",
+        "Includes 6 galactic geometric presets such as black holes, pulsars, and aurora starfields"
+      ],
+      highlights: [
+        "通过 GLSL 着色器直接操作 GPU 显存，跳过 JS 逐帧循环的 CPU 性能瓶颈",
+        "集成基于 Web Audio AnalyserNode 的对数频率平滑，音流起伏过渡流畅丝滑而不突兀",
+        "完美的网页背景，在暗黑模式下呈现出极度放松、解压的赛博视听盛宴"
+      ],
+      highlightsEn: [
+        "Bypassed Javascript loops by delegating state updates straight into GLSL buffers on GPU",
+        "Implemented logarithmic frequency smoothing on Web Audio AnalyserNode for fluid beat impacts",
+        "Provides a highly calming, hypnotic ambient background ideal for cozy focus and lofi vibes"
+      ],
+      role: "独立完成所有视觉粒子数学公式推导、Three.js 画布生命周期控制、GLSL 着色器编写与 Web Audio FFT 频谱调试。",
+      roleEn: "Derived mathematical physics formulas, structured WebGL scene hookups, coded GLSL shaders, and tuned audio analyzer nodes.",
+      demoUrl: "https://spectra.play.dev",
+      sourceUrl: "https://github.com/vibe-coder/spectravibe",
+      status: "实验中",
+      statusEn: "Lab",
+      year: "2025",
+      featured: false
+    },
+    {
+      id: "codevibe",
+      title: "CodeVibe - 沉浸式码农专属白噪音混音台",
+      titleEn: "CodeVibe - Cozy Lofi Programmer Hub",
+      subtitle: "融合 Lo-Fi 极客电子乐、自然声音混音与赛博朋克极简编辑器的专属专注空间",
+      subtitleEn: "Aesthetic lofi synthesizers, mechanical typing sounds, and concentration mixer",
+      category: "效率工具",
+      categoryEn: "Tools",
+      description: "一个专为开发者打造的沉浸式白噪音专注于冥想平台。除了提供雨夜、篝火、咖啡馆等12路高保真自然立体声轨道外，最大的特色是提供了机械键盘敲击声、深夜服务器风扇低吟、终端打印流声等多路极客专属音频，可自由调整音量比例并保存配置，进入沉浸式开发状态。",
+      descriptionEn: "A zen productivity suite customized for tech professionals. Features 12 high-fidelity stereo channels including rainstorms, crackling campfires, lofi beats, and developer specials like mechanical click-clacks, server fan hums, and terminal outputs. Curate your mixes and activate Pomodoro timers.",
+      coverImage: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=800&auto=format&fit=crop", // Sunbeams and cozy trees
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34281-large.mp4",
+          poster: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "Tailwind CSS", "Tone.js", "LocalStorage"],
+      features: [
+        "12路多音轨低延迟平滑混音，支持独立的声像、混响与滤波器调节",
+        "内置赛博极简风格 Markdown 笔记本和极简番茄钟，提供每日极客励志签名",
+        "支持一键导入/导出混音配方（Mix Recipe）JSON 文件，本地历史配方无缝热存取"
+      ],
+      featuresEn: [
+        "12-channel low-latency mixer with individual volume sliders, pan ratios, and reverb nodes",
+        "Built-in retro cyber Markdown notepad, focused Pomodoro widgets, and daily coder quotes",
+        "Seamless JSON sharing to load and backup personalized concentration mix presets"
+      ],
+      highlights: [
+        "基于 Tone.js AudioBuffer机制，实现音频资源无缝无回音无缝循环播放",
+        "前端代码完全无服务器，仅用静态托管，所有用户笔记与混音偏好 100% 存在浏览器中",
+        "UI 自适应多端排版，完美适配程序员的竖屏副屏（Vertical Dual-Screen）显示"
+      ],
+      highlightsEn: [
+        "Fitted Tone.js AudioBuffer players with custom loop points to eliminate stutter and gaps",
+        "Fully serverless application caching config variables and journal entries inside local storage",
+        "Responsive fluid UI tailored to look stunning on vertical secondary developer displays"
+      ],
+      role: "独立完成，从音频采集剪辑、Tone.js 播放控制器编写、Markdown 内核组件开发到整体赛博像素风格 UI 设计。",
+      roleEn: "Entirely made by myself. Curated audio assets, wired Tone.js mix players, and customized retro pixel UI styling.",
+      demoUrl: "https://codevibe.space",
+      sourceUrl: "https://github.com/vibe-coder/codevibe",
+      status: "已完成",
+      statusEn: "Completed",
+      year: "2025",
+      featured: false
+    },
+    {
+      id: "mindmesh",
+      title: "MindMesh - AI 语义关联知识脑图",
+      titleEn: "MindMesh - 3D AI Semantics Map",
+      subtitle: "基于三维力导向图（Force-Directed Graph）的 LLM 自动知识概念关联脑图探索平台",
+      subtitleEn: "Automated 3D knowledge map and logic-guided conceptual graph sandbox",
+      category: "AI 应用",
+      categoryEn: "AI Apps",
+      description: "输入任意学术概念或学习主题，AI 自动拆解其前置、后置和衍生知识关联点，并将其以 3D 力导向力导向三维脑图的形式生动呈现。点击任意知识点，AI 自动调用大模型生成简洁扼要的‘概念速成卡片’，点击连线可追溯两者关联的推演逻辑。",
+      descriptionEn: "An advanced LLM conceptual mapper. Input any scientific concept or educational subject, and the system extracts upstream and downstream correlations, rendering them in a dynamic 3D force-directed semantic graph. Click on nodes to prompt AI reviews, or trace logic paths between notes.",
+      coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop", // Tech network
+      media: [
+        {
+          type: "video",
+          url: "https://assets.mixkit.co/videos/preview/mixkit-hud-interface-of-a-holographic-brain-scanning-43034-large.mp4",
+          poster: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          type: "image",
+          url: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop"
+        }
+      ],
+      techStack: ["Vue 3", "Three.js", "D3-Force-3D", "LangChain", "DeepSeek API", "Tailwind CSS"],
+      features: [
+        "基于 LLM Json Schema 约束的知识概念树抽取与关联度模型设计",
+        "动态三维力导向（3D Force-Directed Graph）实时物理计算，支持滚轮缩放、3D 拖拽碰撞旋转",
+        "内置 Markdown 卡片对话框，针对性提问该节点，形成‘大图谱-小节点’的探究式学习流"
+      ],
+      featuresEn: [
+        "Prompt engineering schemas returning rigid JSON maps of upstream and downstream variables",
+        "Real-time physical force-directed iterations supporting wheel zoom, orbits, and node dragging",
+        "Integrated interactive chat sidebar to deep-dive into conceptual clusters individually"
+      ],
+      highlights: [
+        "结合 3D 力导布局及 WebGL 渲染，即便同屏渲染上千个关联节点也能稳定在 60 FPS 满帧",
+        "自研级语义剪枝算法，大语言模型生成的逻辑循环在进入图谱前被智能合并与剔除",
+        "极其震撼的全屏暗黑网络连线视觉，提供科幻式知识大脑的沉浸感探索"
+      ],
+      highlightsEn: [
+        "Fused 3D physics computations with WebGL shaders, keeping rendering capped at 60 FPS with 1K+ nodes",
+        "Authored tree-pruning heuristics to detect and filter out recursive loops generated by LLM engines",
+        "Spectacular fullscreen dark-mode mesh rendering, simulating a sci-fi cerebral knowledge network"
+      ],
+      role: "负责多模型关联度 API 开发、前端 3D 物理画布架构设计、D3 力导向三维参数映射及前端页面交互实现。",
+      roleEn: "Developed parsing schemas, designed front-end 3D WebGL layouts, wired D3 3D-force-graph libraries, and animated dashboard.",
+      demoUrl: "https://mindmesh.demo.dev",
+      sourceUrl: "#",
+      status: "持续迭代",
+      statusEn: "Active",
+      year: "2026",
+      featured: true
     }
   ],
 
