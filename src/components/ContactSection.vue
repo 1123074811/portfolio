@@ -10,14 +10,19 @@ const copied = ref(false)
 
 // Form states - Preloaded from localStorage for guest convenience
 const formName = ref('')
-const formRole = ref('')
 const formAvatarSeed = ref('')
+const formCustomAvatarDataUrl = ref('')
 const formMessage = ref('')
 const isSubmitting = ref(false)
 const isSuccess = ref(false)
 
-// Live avatar preview using Dicebear Adventurer style
+const fileInputRef = ref(null)
+
+// Live avatar preview using Dicebear Adventurer style or custom uploaded Base64 image
 const avatarPreviewUrl = computed(() => {
+  if (formCustomAvatarDataUrl.value) {
+    return formCustomAvatarDataUrl.value
+  }
   const seed = encodeURIComponent(formAvatarSeed.value || formName.value || 'guest-default')
   return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`
 })
@@ -90,12 +95,42 @@ onMounted(() => {
   // Safe SSR/Hydration pre-fill from localStorage
   try {
     formName.value = localStorage.getItem('vibe_last_guest_name') || ''
-    formRole.value = localStorage.getItem('vibe_last_guest_role') || ''
     formAvatarSeed.value = localStorage.getItem('vibe_last_guest_avatar_seed') || ''
+    formCustomAvatarDataUrl.value = localStorage.getItem('vibe_last_guest_custom_avatar') || ''
   } catch (e) {
     console.warn('LocalStorage pre-fill failed:', e)
   }
 })
+
+const triggerFileUpload = () => {
+  if (fileInputRef.value) {
+    fileInputRef.value.click()
+  }
+}
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  
+  // Guard file size (max 1MB to avoid bloating localStorage limits)
+  if (file.size > 1024 * 1024) {
+    alert(locale.value === 'zh' ? '图片太大了，请上传 1MB 以内的头像图片' : 'Image is too large. Please select an image under 1MB.')
+    return
+  }
+  
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    formCustomAvatarDataUrl.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+const clearCustomAvatar = () => {
+  formCustomAvatarDataUrl.value = ''
+  if (fileInputRef.value) {
+    fileInputRef.value.value = '' // Clear input value
+  }
+}
 
 const copyEmail = () => {
   navigator.clipboard.writeText(personalInfo.email)
@@ -118,15 +153,13 @@ const handleSubmit = async (e) => {
   trackFormSubmission()
 
   try {
-    const finalRole = formRole.value.trim() || (locale.value === 'zh' ? '独立访客' : 'Visitor Guest')
-    const finalAvatarSeed = formAvatarSeed.value.trim() || formName.value.trim() || 'default-seed'
+    const finalAvatar = formCustomAvatarDataUrl.value || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(formAvatarSeed.value.trim() || formName.value.trim() || 'default-seed')}`
     
     // Create a real new message object from user inputs to dynamically display in the slider!
     const newMsg = {
       id: Date.now(),
       name: formName.value.trim(),
-      role: finalRole,
-      avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(finalAvatarSeed)}`,
+      avatar: finalAvatar,
       message: formMessage.value.trim(),
       time: locale.value === 'zh' ? '刚刚' : 'Just now'
     }
@@ -142,7 +175,7 @@ const handleSubmit = async (e) => {
       body: JSON.stringify({
         access_key: "YOUR_WEB3FORMS_ACCESS_KEY_OR_MOCK", // Developer placeholder
         name: formName.value,
-        role: finalRole,
+        avatar_type: formCustomAvatarDataUrl.value ? 'Custom Upload' : 'Generated Seed',
         message: formMessage.value,
         subject: `New Guestbook Message from ${formName.value}`
       })
@@ -158,15 +191,19 @@ const handleSubmit = async (e) => {
     // Persist identity fields in localStorage for the guest's convenience next time
     try {
       localStorage.setItem('vibe_last_guest_name', formName.value.trim())
-      localStorage.setItem('vibe_last_guest_role', formRole.value.trim())
       localStorage.setItem('vibe_last_guest_avatar_seed', formAvatarSeed.value.trim())
+      if (formCustomAvatarDataUrl.value) {
+        localStorage.setItem('vibe_last_guest_custom_avatar', formCustomAvatarDataUrl.value)
+      } else {
+        localStorage.removeItem('vibe_last_guest_custom_avatar')
+      }
     } catch (err) {
       console.warn('Could not save identity to localStorage:', err)
     }
 
     isSuccess.value = true
     
-    // Clear ONLY message input. Keep Name, Role, and Avatar Seed pre-filled for user convenience next time!
+    // Clear ONLY message input. Keep Name, Avatar, and Avatar Seed pre-filled for user convenience next time!
     formMessage.value = ''
   } catch (error) {
     console.error("Serverless form error, falling back to local simulation:", error)
@@ -303,62 +340,90 @@ const resetForm = () => {
               <!-- Interactive Form Fields -->
               <form @submit.prevent="handleSubmit" class="space-y-4 my-2">
                 
-                <!-- Name and Role Row (2-column layout) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <!-- Name Column -->
-                  <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                      {{ locale === 'zh' ? '您的尊称 / Your Name' : 'Your Name' }}
-                    </label>
-                    <input 
-                      v-model="formName"
-                      type="text" 
-                      required
-                      placeholder="e.g. Alex"
-                      class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
-                    />
-                  </div>
-
-                  <!-- Role Column -->
-                  <div class="space-y-1">
-                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                      {{ locale === 'zh' ? '职位与身份 / Your Role' : 'Your Role (Optional)' }}
-                    </label>
-                    <input 
-                      v-model="formRole"
-                      type="text" 
-                      :placeholder="locale === 'zh' ? '如：前端开发 / 招聘经理' : 'e.g. Frontend Dev / Recruiter'"
-                      class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
-                    />
-                  </div>
+                <!-- Name Row (Single full-width column) -->
+                <div class="space-y-1">
+                  <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    {{ locale === 'zh' ? '您的尊称 / Your Name' : 'Your Name' }}
+                  </label>
+                  <input 
+                    v-model="formName"
+                    type="text" 
+                    required
+                    placeholder="e.g. Alex"
+                    class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all"
+                  />
                 </div>
 
-                <!-- Live Dynamic Avatar Generation Card Row -->
+                <!-- Live Dynamic Avatar Generation & Upload Card Row -->
                 <div class="p-3.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/20 dark:bg-slate-950/20 flex items-center space-x-4">
-                  <!-- Dynamic Avatar Preview -->
-                  <div class="flex-shrink-0 relative group">
+                  <!-- Dynamic Avatar Preview with Hover Upload Prompt -->
+                  <div 
+                    @click="triggerFileUpload"
+                    class="flex-shrink-0 relative group cursor-pointer"
+                  >
                     <img 
                       :src="avatarPreviewUrl" 
-                      class="w-12 h-12 rounded-full border-2 border-cyber-violet/40 bg-white dark:bg-slate-900 p-0.5 shadow-md group-hover:scale-105 transition-transform" 
+                      class="w-12 h-12 rounded-full border-2 border-cyber-violet/40 bg-white dark:bg-slate-900 p-0.5 shadow-md group-hover:scale-105 transition-all object-cover" 
                       alt="Avatar Preview" 
                     />
                     <div class="absolute -bottom-1 -right-1 px-1 rounded bg-cyber-violet text-white text-[7px] font-mono font-bold leading-none scale-90 border border-white dark:border-slate-950 uppercase">
-                      LIVE
+                      {{ formCustomAvatarDataUrl ? 'PHOTO' : 'LIVE' }}
+                    </div>
+                    <!-- Hover overlay to prompt upload -->
+                    <div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span class="text-[8px] text-white font-mono font-bold">{{ formCustomAvatarDataUrl ? 'Change' : 'Upload' }}</span>
                     </div>
                   </div>
                   
-                  <!-- Avatar Seed Input -->
-                  <div class="flex-1 space-y-1">
-                    <label class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
-                      <span>{{ locale === 'zh' ? '头像专属种子 / Custom Avatar Seed' : 'Avatar Seed (Optional)' }}</span>
-                      <span class="text-[8px] text-cyber-cyan font-normal lowercase">adventurer</span>
-                    </label>
-                    <input 
-                      v-model="formAvatarSeed"
-                      type="text" 
-                      :placeholder="locale === 'zh' ? '留空默认（支持任意文本）' : 'Type any text to morph avatar'"
-                      class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all font-mono"
-                    />
+                  <!-- Avatar Seed Input / Success message -->
+                  <div class="flex-1 space-y-1 text-left">
+                    <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                      <span>{{ locale === 'zh' ? '专属头像 / Custom Avatar' : 'Custom Avatar' }}</span>
+                      <button 
+                        v-if="formCustomAvatarDataUrl" 
+                        type="button"
+                        @click="clearCustomAvatar"
+                        class="text-[8px] text-red-500 hover:underline font-mono font-bold lowercase cursor-pointer"
+                      >
+                        [reset / 恢复默认]
+                      </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                      <!-- Custom Avatar Seed -->
+                      <input 
+                        v-if="!formCustomAvatarDataUrl"
+                        v-model="formAvatarSeed"
+                        type="text" 
+                        :placeholder="locale === 'zh' ? '可在此输入特定种子生成头像' : 'Type seed to morph avatar'"
+                        class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all font-mono"
+                      />
+                      <!-- Upload Success Badge -->
+                      <div 
+                        v-else 
+                        class="flex-1 px-3 py-1.5 text-xs font-mono text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 rounded-lg"
+                      >
+                        {{ locale === 'zh' ? '✓ 上传本地照片成功' : '✓ Custom photo loaded' }}
+                      </div>
+
+                      <!-- Hidden File Input -->
+                      <input 
+                        type="file" 
+                        ref="fileInputRef" 
+                        accept="image/*" 
+                        class="hidden" 
+                        @change="handleFileUpload" 
+                      />
+
+                      <!-- Upload Button -->
+                      <button 
+                        type="button"
+                        @click="triggerFileUpload"
+                        class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-cyber-violet text-xs font-mono font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900/40 hover:bg-slate-50 cursor-pointer flex items-center space-x-1 flex-shrink-0 active:scale-95 transition-all"
+                      >
+                        <span>{{ locale === 'zh' ? '本地上传' : 'Upload' }}</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -371,7 +436,7 @@ const resetForm = () => {
                     v-model="formMessage"
                     rows="3"
                     required
-                    :placeholder="locale === 'zh' ? '说说您的合作意向、实习招聘或技术建议...' : 'I would love to learn more about your project frameworks...'"
+                    :placeholder="locale === 'zh' ? '说说您的合作意向、招聘说明或技术建议...' : 'I would love to learn more about your project frameworks...'"
                     class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-cyber-violet focus:ring-1 focus:ring-cyber-violet transition-all resize-none"
                   ></textarea>
                 </div>
@@ -451,11 +516,8 @@ const resetForm = () => {
                 <!-- Avatar & Header info -->
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <img :src="msg.avatar" class="w-9 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 p-0.5" alt="avatar" />
-                    <div class="text-left">
-                      <div class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{{ msg.name }}</div>
-                      <div class="text-[9px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">{{ msg.role }}</div>
-                    </div>
+                    <img :src="msg.avatar" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-white p-0.5 object-cover" alt="avatar" />
+                    <div class="text-sm font-bold text-slate-900 dark:text-white text-left">{{ msg.name }}</div>
                   </div>
                   <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">{{ msg.time }}</span>
                 </div>
@@ -475,11 +537,8 @@ const resetForm = () => {
                 <!-- Avatar & Header info -->
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <img :src="msg.avatar" class="w-9 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 p-0.5" alt="avatar" />
-                    <div class="text-left">
-                      <div class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">{{ msg.name }}</div>
-                      <div class="text-[9px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">{{ msg.role }}</div>
-                    </div>
+                    <img :src="msg.avatar" class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 bg-white p-0.5 object-cover" alt="avatar" />
+                    <div class="text-sm font-bold text-slate-900 dark:text-white text-left">{{ msg.name }}</div>
                   </div>
                   <span class="text-[10px] font-mono text-slate-400 dark:text-slate-500">{{ msg.time }}</span>
                 </div>
