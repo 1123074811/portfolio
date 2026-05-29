@@ -1,10 +1,23 @@
 <script setup>
-import { GraduationCap, Briefcase, Calendar, Download, Target } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
+import { GraduationCap, Briefcase, Calendar, Download, Target, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import { portfolioData } from '../data/portfolioData'
 import { locale, translations } from '../data/locale'
 
 const experiences = portfolioData.experiences
 const personalInfo = portfolioData.personalInfo
+
+const INITIAL_LIMIT = 3
+const isExpanded = ref(false)
+
+const visibleExperiences = computed(() => {
+  if (isExpanded.value) {
+    return experiences
+  }
+  return experiences.slice(0, INITIAL_LIMIT)
+})
+
+const hasMore = computed(() => experiences.length > INITIAL_LIMIT)
 
 const alertResume = (e) => {
   if (personalInfo.resumeUrl === '#') {
@@ -40,7 +53,7 @@ const alertResume = (e) => {
           <div class="space-y-12 relative z-10">
             
             <div 
-              v-for="(exp, idx) in experiences" 
+              v-for="(exp, idx) in visibleExperiences" 
               :key="exp.title"
               class="flex flex-col md:flex-row items-start"
               :class="[idx % 2 === 0 ? 'md:flex-row-reverse' : '']"
@@ -88,6 +101,22 @@ const alertResume = (e) => {
                 </div>
               </div>
 
+            </div>
+
+            <!-- Collapse / Expand Toggle Button -->
+            <div v-if="hasMore" class="flex justify-center pt-2 relative z-30">
+              <button 
+                @click="isExpanded = !isExpanded"
+                class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-bold font-mono tracking-wider uppercase text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-850 dark:hover:border-slate-700 transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
+              >
+                <span>
+                  {{ isExpanded 
+                      ? (locale === 'zh' ? '收起完整轨迹' : 'COLLAPSE JOURNEY') 
+                      : (locale === 'zh' ? `展开完整轨迹 (${experiences.length})` : `EXPAND COMPLETE JOURNEY (${experiences.length})`) }}
+                </span>
+                <ChevronUp v-if="isExpanded" class="w-4 h-4 text-cyber-violet dark:text-cyber-cyan" />
+                <ChevronDown v-else class="w-4 h-4 text-cyber-violet dark:text-cyber-cyan" />
+              </button>
             </div>
 
           </div>

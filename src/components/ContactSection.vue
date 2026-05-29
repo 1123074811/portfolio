@@ -1,6 +1,6 @@
 <script setup>
 import { Mail, Github, Chrome, Copy, Check, Send, Sparkles, User, RefreshCw, MessageSquare } from 'lucide-vue-next'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { portfolioData } from '../data/portfolioData'
 import { locale, translations } from '../data/locale'
 import { trackFormSubmission } from '../utils/telemetry'
@@ -17,6 +17,15 @@ const isSubmitting = ref(false)
 const isSuccess = ref(false)
 
 const fileInputRef = ref(null)
+const scrollContainerRef = ref(null)
+const isUserInteracting = ref(false)
+
+// Draggable scrolling & auto-scroll interval states
+let isDragging = false
+let startX = 0
+let scrollLeftStart = 0
+let animationFrameId = null
+let resumeTimeout = null
 
 // Live avatar preview using Dicebear Adventurer style or custom uploaded Base64 image
 const avatarPreviewUrl = computed(() => {
@@ -100,7 +109,80 @@ onMounted(() => {
   } catch (e) {
     console.warn('LocalStorage pre-fill failed:', e)
   }
+
+  // Start smooth auto-scrolling loop
+  startAutoScroll()
 })
+
+onUnmounted(() => {
+  stopAutoScroll()
+  clearTimeout(resumeTimeout)
+})
+
+// Auto-scrolling via requestAnimationFrame for flawless 60fps scrolling
+const startAutoScroll = () => {
+  if (isUserInteracting.value || isDragging) return
+  
+  const scroll = () => {
+    const el = scrollContainerRef.value
+    if (!el) return
+    
+    el.scrollLeft += 0.45 // Travel 0.45px per frame for a gentle and legible scrolling pace
+    
+    // Instant seamless reset to index 0 once scrolled past half (the first duplicate set of messages)
+    if (el.scrollLeft >= el.scrollWidth / 2) {
+      el.scrollLeft = 0
+    }
+    
+    animationFrameId = requestAnimationFrame(scroll)
+  }
+  
+  animationFrameId = requestAnimationFrame(scroll)
+}
+
+const stopAutoScroll = () => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId)
+    animationFrameId = null
+  }
+}
+
+// Mouse dragging & Touch swiping handlers
+const startDrag = (e) => {
+  isDragging = true
+  isUserInteracting.value = true
+  clearTimeout(resumeTimeout)
+  stopAutoScroll()
+  
+  const pageX = e.pageX || (e.touches && e.touches[0].pageX)
+  if (!pageX) return
+  
+  startX = pageX - scrollContainerRef.value.offsetLeft
+  scrollLeftStart = scrollContainerRef.value.scrollLeft
+}
+
+const stopDrag = () => {
+  if (!isDragging) return
+  isDragging = false
+  
+  // Resume automatic sliding after 4.5 seconds of user idleness
+  resumeTimeout = setTimeout(() => {
+    isUserInteracting.value = false
+    startAutoScroll()
+  }, 4500)
+}
+
+const onDrag = (e) => {
+  if (!isDragging) return
+  e.preventDefault()
+  
+  const pageX = e.pageX || (e.touches && e.touches[0].pageX)
+  if (!pageX) return
+  
+  const x = pageX - scrollContainerRef.value.offsetLeft
+  const walk = (x - startX) * 1.5 // Multiplier speed sensitivity
+  scrollContainerRef.value.scrollLeft = scrollLeftStart - walk
+}
 
 const triggerFileUpload = () => {
   if (fileInputRef.value) {
