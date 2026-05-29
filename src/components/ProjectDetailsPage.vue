@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps, ref, computed, watch } from 'vue'
+import { defineProps, ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { ArrowLeft, ExternalLink, Github, Sparkles, CheckCircle2, User, Calendar, Tag, Layers, Monitor, ChevronLeft, ChevronRight, FileText, Terminal, Code2 } from 'lucide-vue-next'
 import { locale, translations, closeProjectDetails } from '../data/locale'
+import { trackPageView, trackReadmeToggle } from '../utils/telemetry'
 
 const props = defineProps({
   project: {
@@ -13,10 +14,20 @@ const props = defineProps({
 const currentMediaIndex = ref(0)
 const showRawReadme = ref(false)
 
-// Reset index and tab when the project changes
-watch(() => props.project, () => {
+// Reset index and tab when the project changes, and log telemetry pageview
+watch(() => props.project, (newProject) => {
   currentMediaIndex.value = 0
   showRawReadme.value = false
+  if (newProject) {
+    trackPageView(`details:${newProject.id}`)
+  }
+}, { immediate: true })
+
+// Log telemetry readme toggling action
+watch(showRawReadme, (newVal) => {
+  if (props.project) {
+    trackReadmeToggle(props.project.id, newVal)
+  }
 })
 
 const projectMedia = computed(() => {
@@ -230,6 +241,10 @@ const parseMarkdown = (markdown) => {
   // Bold (**text**)
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-slate-900 dark:text-white">$1</strong>')
   
+  // Safe links & image protocol block (Anti-XSS Sanitizer)
+  html = html.replace(/href="javascript:/gi, 'href="#unsafe-script-blocked')
+  html = html.replace(/src="javascript:/gi, 'src="#unsafe-script-blocked')
+
   // Simple Bullet Lists
   html = html.replace(/^\s*[\-\*]\s+(.*?)$/gm, '<div class="text-sm sm:text-base text-slate-600 dark:text-slate-300 ml-4 pl-1 leading-relaxed flex items-start space-x-2 my-2"><span class="text-cyber-violet dark:text-cyber-cyan font-bold">•</span><span>$1</span></div>')
 
@@ -246,17 +261,60 @@ const parseMarkdown = (markdown) => {
   
   return html
 }
+
+const handleKeyDown = (e) => {
+  if (e.key === 'Escape') {
+    closeProjectDetails()
+  } else if (e.key === 'ArrowLeft') {
+    prevMedia()
+  } else if (e.key === 'ArrowRight') {
+    nextMedia()
+  } else if (e.key === 'Tab') {
+    // Keyboard Focus Trap for accessibility
+    const modal = document.querySelector('.project-details-container')
+    if (!modal) return
+    const focusables = modal.querySelectorAll('button, a, input, select, textarea, [tabindex="0"]')
+    if (focusables.length === 0) return
+    const first = focusables[0]
+    const last = focusables[focusables.length - 1]
+    
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        last.focus()
+        e.preventDefault()
+      }
+    } else {
+      if (document.activeElement === last) {
+        first.focus()
+        e.preventDefault()
+      }
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+  // Shift focus to the details container for seamless accessibility
+  setTimeout(() => {
+    const backBtn = document.querySelector('.back-navigation-btn')
+    if (backBtn) backBtn.focus()
+  }, 100)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 pt-24 pb-16 animate-in fade-in slide-in-from-bottom-4 duration-300">
+  <div class="project-details-container min-h-screen bg-slate-50 dark:bg-slate-950 pt-24 pb-16 animate-in fade-in slide-in-from-bottom-4 duration-300">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <!-- Sticky Back Navigation Bar -->
       <div class="mb-8 flex items-center justify-between">
         <button 
           @click="closeProjectDetails"
-          class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-95"
+          class="back-navigation-btn inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 dark:text-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-95"
         >
           <ArrowLeft class="w-4 h-4" />
           <span>{{ locale === 'zh' ? '返回作品集' : 'Back to Portfolio' }}</span>

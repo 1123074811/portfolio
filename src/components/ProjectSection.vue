@@ -5,6 +5,7 @@ import ProjectCard from './ProjectCard.vue'
 import ProjectFilter from './ProjectFilter.vue'
 import { Sparkles, Compass, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import { locale, translations, openProjectDetails } from '../data/locale'
+import { trackFilterClick } from '../utils/telemetry'
 
 const projects = portfolioData.projects
 const categories = computed(() => locale.value === 'zh' ? portfolioData.categories : portfolioData.categoriesEn)
@@ -51,6 +52,7 @@ const toggleExpand = () => {
 
 const changeCategory = (cat) => {
   activeCategory.value = cat
+  trackFilterClick(cat)
 }
 </script>
 

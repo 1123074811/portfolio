@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps, defineEmits, ref, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, onMounted, onUnmounted } from 'vue'
 import { ExternalLink, Github, Sparkles, CheckCircle2, FlaskConical, Play, Image } from 'lucide-vue-next'
 import { locale, translations } from '../data/locale'
+import { trackCardHover } from '../utils/telemetry'
 
 const props = defineProps({
   project: {
@@ -14,6 +15,10 @@ const emit = defineEmits(['open-details', 'openDetails'])
 
 const isHovered = ref(false)
 const videoRef = ref(null)
+const imageLoaded = ref(false)
+const isNearViewport = ref(false)
+const cardRef = ref(null)
+let observer = null
 
 // Find if there is a video in the media array
 const cardVideo = computed(() => {
@@ -25,6 +30,7 @@ const cardVideo = computed(() => {
 
 const handleMouseEnter = () => {
   isHovered.value = true
+  trackCardHover(props.project.id)
   if (videoRef.value) {
     videoRef.value.play().catch(() => {
       // Ignore autoplay block errors from browser
@@ -53,10 +59,34 @@ const getStatusClasses = (status) => {
       return 'bg-slate-500/10 text-slate-500 border-slate-500/20'
   }
 }
+
+onMounted(() => {
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        isNearViewport.value = true
+        if (observer) observer.disconnect()
+      }
+    }, { rootMargin: '120px' })
+    
+    if (cardRef.value) {
+      observer.observe(cardRef.value)
+    }
+  } else {
+    isNearViewport.value = true
+  }
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
+})
 </script>
 
 <template>
   <div 
+    ref="cardRef"
     class="group cyber-card flex flex-col overflow-hidden h-full cursor-pointer hover:border-cyber-violet/30 transition-all duration-300" 
     @click="emit('open-details', project)"
     @mouseenter="handleMouseEnter"
@@ -64,17 +94,30 @@ const getStatusClasses = (status) => {
   >
     <!-- Image Header Frame -->
     <div class="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
+      
+      <!-- Skeleton Loading State -->
+      <div 
+        v-if="!imageLoaded"
+        class="absolute inset-0 bg-slate-200 dark:bg-slate-900 animate-pulse flex items-center justify-center z-10"
+      >
+        <Sparkles class="w-6 h-6 text-slate-400 dark:text-slate-700 animate-spin" style="animation-duration: 4s;" />
+      </div>
+
       <!-- Project Cover image -->
       <img 
         :src="project.coverImage" 
         :alt="locale === 'zh' ? project.title : project.titleEn"
+        @load="imageLoaded = true"
         class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-        :class="{ 'opacity-0 scale-105': isHovered && cardVideo }"
+        :class="[
+          imageLoaded ? 'opacity-100' : 'opacity-0',
+          { 'opacity-0 scale-105': isHovered && cardVideo }
+        ]"
       />
 
-      <!-- Hover Video Preview -->
+      <!-- Hover Video Preview (Lazy Loaded) -->
       <video
-        v-if="cardVideo"
+        v-if="cardVideo && isNearViewport"
         ref="videoRef"
         :src="cardVideo.url"
         muted
