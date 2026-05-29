@@ -3,17 +3,24 @@ import { ref, computed, watch } from 'vue'
 import { portfolioData } from '../data/portfolioData'
 import ProjectCard from './ProjectCard.vue'
 import ProjectFilter from './ProjectFilter.vue'
-import { Sparkles, Compass } from 'lucide-vue-next'
+import { Sparkles, Compass, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import { locale, translations, openProjectDetails } from '../data/locale'
 
 const projects = portfolioData.projects
 const categories = computed(() => locale.value === 'zh' ? portfolioData.categories : portfolioData.categoriesEn)
 
 const activeCategory = ref('全部')
+const isExpanded = ref(false)
+const limit = ref(6) // Only show 6 initially
 
-// Sync activeCategory when locale changes
+// Reset activeCategory when locale changes
 watch(locale, (newVal) => {
   activeCategory.value = newVal === 'zh' ? '全部' : 'All'
+})
+
+// Reset expansion state when filtering categories
+watch(activeCategory, () => {
+  isExpanded.value = false
 })
 
 const filteredProjects = computed(() => {
@@ -26,6 +33,21 @@ const filteredProjects = computed(() => {
     return cat === activeCategory.value
   })
 })
+
+const displayedProjects = computed(() => {
+  if (isExpanded.value) {
+    return filteredProjects.value
+  }
+  return filteredProjects.value.slice(0, limit.value)
+})
+
+const hasMore = computed(() => {
+  return filteredProjects.value.length > limit.value
+})
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value
+}
 
 const changeCategory = (cat) => {
   activeCategory.value = cat
@@ -61,15 +83,42 @@ const changeCategory = (cat) => {
         />
       </div>
 
-      <!-- Projects Grid Layout -->
-      <div v-if="filteredProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Projects Grid Layout with Transition Group -->
+      <transition-group 
+        v-if="displayedProjects.length > 0" 
+        tag="div" 
+        name="project-list"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
         <div 
-          v-for="project in filteredProjects" 
+          v-for="project in displayedProjects" 
           :key="project.id"
-          class="transition-all duration-300 transform"
+          class="transition-all duration-500 transform origin-center"
         >
           <ProjectCard :project="project" @open-details="openProjectDetails" />
         </div>
+      </transition-group>
+
+      <!-- Show More / Less Button -->
+      <div v-if="hasMore" class="mt-12 flex justify-center animate-in fade-in zoom-in duration-300">
+        <button 
+          @click="toggleExpand"
+          class="group relative inline-flex items-center space-x-2 px-6 py-3 rounded-2xl text-sm font-semibold text-slate-700 bg-white border border-slate-200/80 hover:bg-slate-50 dark:text-slate-200 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 transition-all shadow-sm hover:shadow-md hover:shadow-cyber-violet/5 hover:border-cyber-violet/20 active:scale-[0.98] cursor-pointer overflow-hidden"
+        >
+          <!-- Gradient border glow -->
+          <span class="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyber-violet/10 to-cyber-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+          
+          <span class="relative z-10">
+            {{ isExpanded 
+                ? (locale === 'zh' ? '收起部分作品' : 'Show Less') 
+                : (locale === 'zh' ? `展开全部作品 (${filteredProjects.length})` : `Show All Projects (${filteredProjects.length})`) 
+            }}
+          </span>
+          <component 
+            :is="isExpanded ? ChevronUp : ChevronDown" 
+            class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-cyber-violet dark:group-hover:text-cyber-cyan transition-colors relative z-10"
+          />
+        </button>
       </div>
 
       <!-- Empty State -->
@@ -93,3 +142,25 @@ const changeCategory = (cat) => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.project-list-enter-from {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+}
+.project-list-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.project-list-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.project-list-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+}
+.project-list-move {
+  transition: transform 0.5s ease;
+}
+</style>

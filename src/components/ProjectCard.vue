@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref, computed } from 'vue'
 import { ExternalLink, Github, Sparkles, CheckCircle2, FlaskConical, Play, Image } from 'lucide-vue-next'
 import { locale, translations } from '../data/locale'
 
@@ -11,6 +11,34 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['open-details', 'openDetails'])
+
+const isHovered = ref(false)
+const videoRef = ref(null)
+
+// Find if there is a video in the media array
+const cardVideo = computed(() => {
+  if (props.project.media && props.project.media.length > 0) {
+    return props.project.media.find(m => m.type === 'video')
+  }
+  return null
+})
+
+const handleMouseEnter = () => {
+  isHovered.value = true
+  if (videoRef.value) {
+    videoRef.value.play().catch(() => {
+      // Ignore autoplay block errors from browser
+    })
+  }
+}
+
+const handleMouseLeave = () => {
+  isHovered.value = false
+  if (videoRef.value) {
+    videoRef.value.pause()
+    videoRef.value.currentTime = 0
+  }
+}
 
 // Format status tags with appropriate colors
 const getStatusClasses = (status) => {
@@ -28,24 +56,43 @@ const getStatusClasses = (status) => {
 </script>
 
 <template>
-  <div class="group cyber-card flex flex-col overflow-hidden h-full cursor-pointer hover:border-cyber-violet/30 transition-all duration-300" @click="emit('open-details', project)">
+  <div 
+    class="group cyber-card flex flex-col overflow-hidden h-full cursor-pointer hover:border-cyber-violet/30 transition-all duration-300" 
+    @click="emit('open-details', project)"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
     <!-- Image Header Frame -->
     <div class="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
       <!-- Project Cover image -->
       <img 
         :src="project.coverImage" 
         :alt="locale === 'zh' ? project.title : project.titleEn"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+        :class="{ 'opacity-0 scale-105': isHovered && cardVideo }"
       />
+
+      <!-- Hover Video Preview -->
+      <video
+        v-if="cardVideo"
+        ref="videoRef"
+        :src="cardVideo.url"
+        muted
+        loop
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0 pointer-events-none"
+        :class="{ 'opacity-100': isHovered }"
+      ></video>
+
       <!-- Category Pill -->
-      <div class="absolute top-4 left-4 z-10">
+      <div class="absolute top-4 left-4 z-10 pointer-events-none">
         <span class="text-[10px] font-mono font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-slate-900/80 text-white border border-white/10 backdrop-blur-md shadow-md">
           {{ locale === 'zh' ? project.category : project.categoryEn }}
         </span>
       </div>
 
       <!-- Status Pill -->
-      <div class="absolute top-4 right-4 z-10">
+      <div class="absolute top-4 right-4 z-10 pointer-events-none">
         <span 
           class="inline-flex items-center space-x-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full border shadow-sm backdrop-blur-md"
           :class="getStatusClasses(project.status)"
@@ -64,8 +111,13 @@ const getStatusClasses = (status) => {
 
       <!-- Media Type indicator (bottom-right of image) -->
       <div v-if="project.media && project.media.length > 1" class="absolute bottom-3 right-3 z-10 bg-slate-950/70 border border-white/10 text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm shadow flex items-center space-x-1 pointer-events-none">
-        <!-- If has video -->
-        <span v-if="project.media.some(m => m.type === 'video')" class="flex items-center space-x-1">
+        <!-- If has video and hovered -->
+        <span v-if="cardVideo && isHovered" class="flex items-center space-x-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+          <span>PLAYING PREVIEW</span>
+        </span>
+        <!-- If has video and not hovered -->
+        <span v-else-if="props.project.media.some(m => m.type === 'video')" class="flex items-center space-x-1">
           <Play class="w-2.5 h-2.5 fill-white text-white" />
           <span>VIDEO</span>
         </span>

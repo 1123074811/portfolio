@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, ref, computed, watch } from 'vue'
-import { ArrowLeft, ExternalLink, Github, Sparkles, CheckCircle2, User, Calendar, Tag, Layers, Monitor, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { ArrowLeft, ExternalLink, Github, Sparkles, CheckCircle2, User, Calendar, Tag, Layers, Monitor, ChevronLeft, ChevronRight, FileText, Terminal, Code2 } from 'lucide-vue-next'
 import { locale, translations, closeProjectDetails } from '../data/locale'
 
 const props = defineProps({
@@ -11,10 +11,12 @@ const props = defineProps({
 })
 
 const currentMediaIndex = ref(0)
+const showRawReadme = ref(false)
 
-// Reset index when the project changes
+// Reset index and tab when the project changes
 watch(() => props.project, () => {
   currentMediaIndex.value = 0
+  showRawReadme.value = false
 })
 
 const projectMedia = computed(() => {
@@ -39,6 +41,210 @@ const prevMedia = () => {
 
 const setMedia = (index) => {
   currentMediaIndex.value = index
+}
+
+// Generate a professional repository-grade README file
+const getProjectReadme = computed(() => {
+  if (props.project.readme) {
+    return props.project.readme
+  }
+  
+  const isZh = locale.value === 'zh'
+  const title = isZh ? props.project.title : props.project.titleEn
+  const subtitle = isZh ? props.project.subtitle : props.project.subtitleEn
+  const desc = isZh ? props.project.description : props.project.descriptionEn
+  const features = isZh ? props.project.features : props.project.featuresEn
+  const highlights = isZh ? props.project.highlights : props.project.highlightsEn
+  const role = isZh ? props.project.role : props.project.roleEn
+  const tech = props.project.techStack || []
+  const year = props.project.year || "2026"
+  const repoName = props.project.id ? props.project.id.toLowerCase() : "project-repository"
+  const githubUrl = props.project.sourceUrl && props.project.sourceUrl !== "#" ? props.project.sourceUrl : `https://github.com/vibe-coder/${repoName}`
+  const demoUrl = props.project.demoUrl && props.project.demoUrl !== "#" ? props.project.demoUrl : `https://${repoName}.vibe.dev`
+
+  if (isZh) {
+    return `# ${title}
+
+> ${subtitle}
+
+---
+
+## 📖 项目背景与愿景
+
+${desc}
+
+## ⚡ 核心功能模块
+
+${features.map(f => `- **${f.split('，')[0] || f}**: ${f}`).join('\n')}
+
+## 🛠️ 技术选型与拓扑体系
+
+该项目严格采用现代化、低延时且具有高并发冗余的技术栈架构：
+
+\`\`\`javascript
+const ActiveStackConfig = {
+  version: "1.0.0",
+  year: "${year}",
+  frontend: "Vue 3 (Composition API) + Tailwind CSS",
+  ecosystem: ${JSON.stringify(tech)},
+  deployment: "Vite + Edge Hosting / Cloudflare"
+};
+\`\`\`
+
+## 💎 架构突破与性能调优
+
+该项目在开发阶段解决了多项核心性能难题：
+
+${highlights.map(h => `- ${h}`).join('\n')}
+
+## 👤 开发贡献说明
+
+- **我的职责**: ${role}
+
+## 🚀 部署指南与快速启动
+
+请确保本地已配置 \`Node.js v18+\` 与包管理器，然后在终端运行：
+
+\`\`\`bash
+# 1. 克隆代码仓库到本地
+git clone ${githubUrl}.git
+
+# 2. 进入项目主目录并安装系统依赖
+cd ${repoName}
+npm install
+
+# 3. 启动本地开发服务热加载
+npm run dev
+\`\`\`
+
+---
+
+*该 README.md 由 Vibe Portfolio Engine 自动装配生成。*
+`
+  } else {
+    return `# ${title}
+
+> ${subtitle}
+
+---
+
+## 📖 Project Background & Vision
+
+${desc}
+
+## ⚡ Key Features
+
+${features.map(f => `- **${f.split(',')[0] || f}**: ${f}`).join('\n')}
+
+## 🛠️ Tech Stack & Ecosystem
+
+Built with highly reliable, scalable, and modern framework protocols:
+
+\`\`\`javascript
+const ActiveStackConfig = {
+  version: "1.0.0",
+  year: "${year}",
+  frontend: "Vue 3 (Composition API) + Tailwind CSS",
+  ecosystem: ${JSON.stringify(tech)},
+  deployment: "Vite + Edge Hosting / Cloudflare"
+};
+\`\`\`
+
+## 💎 Technical Achievements & Optimizations
+
+This codebase implements critical breakthroughs during its compilation sprint:
+
+${highlights.map(h => `- ${h}`).join('\n')}
+
+## 👤 Role & Contributions
+
+- **Main Responsibilities**: ${role}
+
+## 🚀 Quick Start & Installation
+
+Ensure you have \`Node.js v18+\` and a package manager configured. Run these terminal lines:
+
+\`\`\`bash
+# 1. Clone active source branch
+git clone ${githubUrl}.git
+
+# 2. Enter workspace folder and install dependencies
+cd ${repoName}
+npm install
+
+# 3. Fire up hot-reloading development server
+npm run dev
+\`\`\`
+
+---
+
+*This README.md is dynamically rendered and compiled by Vibe Portfolio Engine.*
+`
+  }
+})
+
+// Lightweight regex-based markdown compiler for custom Tailwind rendering
+const parseMarkdown = (markdown) => {
+  if (!markdown) return ""
+  
+  // Escape HTML tags to prevent injections but preserve our generated structure
+  let html = markdown
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+  
+  // Headers
+  html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-6 mb-4 pb-2 border-b border-slate-200 dark:border-slate-800 font-mono tracking-tight">$1</h1>')
+  html = html.replace(/^## (.*?)$/gm, '<h2 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-200 mt-6 mb-3 pb-1 border-b border-slate-100 dark:border-slate-900/40 flex items-center space-x-2"><span class="text-cyber-violet">#</span> <span>$1</span></h2>')
+  html = html.replace(/^### (.*?)$/gm, '<h3 class="text-base font-bold text-slate-800 dark:text-slate-200 mt-4 mb-2">$1</h3>')
+  
+  // Blockquotes (e.g. > subtitle)
+  html = html.replace(/^> (.*?)$/gm, '<blockquote class="pl-4 border-l-4 border-cyber-violet/40 text-slate-500 dark:text-slate-400 italic my-4">$1</blockquote>')
+
+  // Horizontal Rules
+  html = html.replace(/^---$/gm, '<hr class="my-6 border-slate-200 dark:border-slate-800" />')
+
+  // Fenced Code Blocks (```lang ... ```)
+  html = html.replace(/```([\s\S]*?)```/gm, (match, code) => {
+    const lines = code.trim().split('\n')
+    let lang = 'code'
+    if (lines[0] && lines[0].length < 15 && !lines[0].includes(' ') && !lines[0].includes('=')) {
+      lang = lines.shift()
+    }
+    const cleanCode = lines.join('\n')
+    return `<div class="my-5 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800/80 shadow-sm font-mono text-xs sm:text-sm bg-slate-950 text-slate-100 relative">
+      <div class="px-4 py-2 bg-slate-900 text-slate-400 font-mono text-[9px] uppercase tracking-wider flex items-center justify-between border-b border-slate-800/50">
+        <span class="flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+          <span>${lang}</span>
+        </span>
+        <span class="text-[9px] text-cyber-cyan font-semibold">LOCAL ENV</span>
+      </div>
+      <pre class="p-4 overflow-x-auto text-left leading-relaxed"><code class="select-text">${cleanCode}</code></pre>
+    </div>`
+  })
+  
+  // Inline Code (`code`)
+  html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-900 text-cyber-violet dark:text-cyber-cyan font-mono text-xs border border-slate-200/20">$1</code>')
+  
+  // Bold (**text**)
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-slate-900 dark:text-white">$1</strong>')
+  
+  // Simple Bullet Lists
+  html = html.replace(/^\s*[\-\*]\s+(.*?)$/gm, '<div class="text-sm sm:text-base text-slate-600 dark:text-slate-300 ml-4 pl-1 leading-relaxed flex items-start space-x-2 my-2"><span class="text-cyber-violet dark:text-cyber-cyan font-bold">•</span><span>$1</span></div>')
+
+  // Paragraphs grouping
+  const paragraphs = html.split('\n\n')
+  html = paragraphs.map(p => {
+    const trimmed = p.trim()
+    if (!trimmed) return ''
+    if (trimmed.startsWith('<h') || trimmed.startsWith('<div') || trimmed.startsWith('<blockquote') || trimmed.startsWith('<hr') || trimmed.startsWith('<pre')) {
+      return trimmed
+    }
+    return `<p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed my-3">${trimmed}</p>`
+  }).join('\n')
+  
+  return html
 }
 </script>
 
@@ -243,6 +449,66 @@ const setMedia = (index) => {
             <p class="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-mono">
               {{ locale === 'zh' ? project.role : project.roleEn }}
             </p>
+          </div>
+
+          <!-- Box 4: GitHub-style README Module -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md bg-white dark:bg-cyber-card overflow-hidden text-left flex flex-col">
+            
+            <!-- README Header resembling GitHub repository header tab -->
+            <div class="px-5 py-3.5 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between flex-wrap gap-3">
+              <div class="flex items-center space-x-2.5 font-mono text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">
+                <FileText class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                <span>README.md</span>
+                <span class="px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-slate-800 text-[10px] text-slate-500 dark:text-slate-400 font-normal">main</span>
+              </div>
+
+              <!-- Raw / Preview toggle controls -->
+              <div class="flex items-center bg-slate-200/55 dark:bg-slate-950/80 rounded-xl p-0.5 border border-slate-200/20">
+                <button 
+                  @click="showRawReadme = false"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all select-none cursor-pointer"
+                  :class="[
+                    !showRawReadme 
+                      ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm' 
+                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-transparent border-0'
+                  ]"
+                >
+                  <Terminal class="w-3.5 h-3.5" />
+                  <span>{{ locale === 'zh' ? '页面预览' : 'Preview' }}</span>
+                </button>
+                <button 
+                  @click="showRawReadme = true"
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all select-none cursor-pointer"
+                  :class="[
+                    showRawReadme 
+                      ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm' 
+                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-transparent border-0'
+                  ]"
+                >
+                  <Code2 class="w-3.5 h-3.5" />
+                  <span>{{ locale === 'zh' ? '原始源码' : 'Raw Markdown' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- README Content Area -->
+            <div class="p-6 sm:p-8 overflow-hidden">
+              <!-- Rendered markdown preview -->
+              <div 
+                v-if="!showRawReadme" 
+                v-html="parseMarkdown(getProjectReadme)"
+                class="select-text prose-custom"
+              ></div>
+              
+              <!-- Raw markdown code display -->
+              <div v-else class="relative font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-300 bg-slate-50 dark:bg-slate-950/50 p-4 sm:p-6 rounded-xl border border-slate-200/60 dark:border-slate-800/80 overflow-x-auto text-left leading-relaxed">
+                <div class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-slate-200/50 dark:bg-slate-900 text-[10px] text-slate-500 uppercase font-bold tracking-wider pointer-events-none">
+                  MARKDOWN
+                </div>
+                <pre class="select-text whitespace-pre-wrap"><code>{{ getProjectReadme }}</code></pre>
+              </div>
+            </div>
+
           </div>
 
         </div>
