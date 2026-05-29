@@ -112,15 +112,49 @@ const handleFileUpload = (event) => {
   const file = event.target.files[0]
   if (!file) return
   
-  // Guard file size (max 1MB to avoid bloating localStorage limits)
-  if (file.size > 1024 * 1024) {
-    alert(locale.value === 'zh' ? '图片太大了，请上传 1MB 以内的头像图片' : 'Image is too large. Please select an image under 1MB.')
+  // Guard file size (max 5MB limit)
+  if (file.size > 5 * 1024 * 1024) {
+    alert(locale.value === 'zh' ? '图片太大了，请上传 5MB 以内的头像图片' : 'Image is too large. Please select an image under 5MB.')
     return
   }
   
   const reader = new FileReader()
   reader.onload = (e) => {
-    formCustomAvatarDataUrl.value = e.target.result
+    const img = new Image()
+    img.onload = () => {
+      // Create off-screen Canvas to downscale and compress the image
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
+      // A high-quality 128x128 square is perfect for tiny circular avatars
+      const targetSize = 128
+      canvas.width = targetSize
+      canvas.height = targetSize
+      
+      // Calculate crop coordinates for center-cover positioning
+      let srcX = 0
+      let srcY = 0
+      let srcWidth = img.width
+      let srcHeight = img.height
+      
+      if (img.width > img.height) {
+        srcWidth = img.height
+        srcX = (img.width - img.height) / 2
+      } else {
+        srcHeight = img.width
+        srcY = (img.height - img.width) / 2
+      }
+      
+      // Draw center-cropped image onto canvas
+      ctx.drawImage(img, srcX, srcY, srcWidth, srcHeight, 0, 0, targetSize, targetSize)
+      
+      // Compress to lightweight JPEG with 0.8 quality (~8KB - 12KB average size)
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8)
+      formCustomAvatarDataUrl.value = compressedBase64
+      
+      console.log(`[Avatar Compression] Successfully center-cropped and compressed ${Math.round(file.size / 1024)}KB image to ${Math.round(compressedBase64.length / 1024)}KB payload for LocalStorage safety.`)
+    }
+    img.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
