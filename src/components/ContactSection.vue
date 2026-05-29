@@ -164,11 +164,23 @@ const startDrag = (e) => {
   const rect = scrollContainerRef.value.getBoundingClientRect()
   startX = clientX - rect.left
   scrollLeftStart = scrollContainerRef.value.scrollLeft
+
+  // Bind to global window object to capture high-speed drags outside container
+  window.addEventListener('mousemove', onDrag)
+  window.addEventListener('mouseup', stopDrag)
+  window.addEventListener('touchmove', onDrag, { passive: false })
+  window.addEventListener('touchend', stopDrag)
 }
 
 const stopDrag = () => {
   if (!isDragging) return
   isDragging = false
+
+  // Unbind global window listeners
+  window.removeEventListener('mousemove', onDrag)
+  window.removeEventListener('mouseup', stopDrag)
+  window.removeEventListener('touchmove', onDrag)
+  window.removeEventListener('touchend', stopDrag)
   
   // Resume automatic sliding after 4.5 seconds of user idleness
   resumeTimeout = setTimeout(() => {
@@ -187,7 +199,25 @@ const onDrag = (e) => {
   const rect = scrollContainerRef.value.getBoundingClientRect()
   const x = clientX - rect.left
   const walk = (x - startX) * 1.5 // Drag sensitivity multiplier
-  scrollContainerRef.value.scrollLeft = scrollLeftStart - walk
+  
+  const el = scrollContainerRef.value
+  const halfWidth = el.scrollWidth / 2
+  let newScrollLeft = scrollLeftStart - walk
+
+  // 100% Seamless Bidirectional Infinite Drag-Wrapping Math
+  if (newScrollLeft < 0) {
+    // Left boundary crossed: wrap back to the second half copy instantly
+    newScrollLeft = halfWidth + newScrollLeft
+    startX = clientX - rect.left // Readjust reference anchors to avoid visual snapping
+    scrollLeftStart = newScrollLeft
+  } else if (newScrollLeft >= halfWidth) {
+    // Right boundary crossed: wrap forward to the first copy instantly
+    newScrollLeft = newScrollLeft - halfWidth
+    startX = clientX - rect.left // Readjust reference anchors to avoid visual snapping
+    scrollLeftStart = newScrollLeft
+  }
+
+  el.scrollLeft = newScrollLeft
 }
 
 const triggerFileUpload = () => {
@@ -624,16 +654,22 @@ const resetForm = () => {
           </p>
         </div>
 
-        <!-- Sliding Marquee Lane Wrapper -->
+        <!-- Sliding Marquee Lane Wrapper with Draggable Mouse Handlers -->
         <div class="relative w-full overflow-hidden py-4 bg-slate-100/10 dark:bg-slate-900/10 border-y border-slate-200/30 dark:border-slate-800/30">
-          <div class="flex select-none overflow-hidden">
-            <div class="animate-marquee flex gap-6">
+          <div class="w-full select-none">
+            <div 
+              ref="scrollContainerRef"
+              class="flex gap-6 overflow-x-auto scrollbar-none cursor-grab active:cursor-grabbing px-4 select-none py-2"
+              style="-webkit-overflow-scrolling: touch; scroll-behavior: auto;"
+              @mousedown="startDrag"
+              @touchstart="startDrag"
+            >
               
               <!-- First Copy -->
               <div 
                 v-for="msg in messagesList" 
                 :key="'copy1-' + msg.id"
-                class="flex-shrink-0 w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
+                class="flex-shrink-0 w-[300px] sm:w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
               >
                 <!-- Avatar & Header info -->
                 <div class="flex items-center justify-between">
@@ -650,11 +686,11 @@ const resetForm = () => {
                 </p>
               </div>
 
-              <!-- Second Copy for Infinite Marquee Loop -->
+              <!-- Second Copy for Infinite Loop -->
               <div 
                 v-for="msg in messagesList" 
                 :key="'copy2-' + msg.id"
-                class="flex-shrink-0 w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
+                class="flex-shrink-0 w-[300px] sm:w-[320px] p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/80 bg-white/80 dark:bg-cyber-card/80 backdrop-blur-md shadow-sm hover:shadow-md hover:border-cyber-violet/30 dark:hover:border-cyber-cyan/30 transition-all flex flex-col justify-between space-y-4"
               >
                 <!-- Avatar & Header info -->
                 <div class="flex items-center justify-between">
