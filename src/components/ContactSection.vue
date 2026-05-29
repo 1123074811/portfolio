@@ -149,15 +149,20 @@ const stopAutoScroll = () => {
 
 // Mouse dragging & Touch swiping handlers
 const startDrag = (e) => {
+  // Prevent browser text-selection & ghost image-dragging default behavior
+  if (e.type === 'mousedown') {
+    e.preventDefault()
+  }
   isDragging = true
   isUserInteracting.value = true
   clearTimeout(resumeTimeout)
   stopAutoScroll()
   
-  const pageX = e.pageX || (e.touches && e.touches[0].pageX)
-  if (!pageX) return
+  const clientX = e.clientX || (e.touches && e.touches[0].clientX)
+  if (clientX === undefined) return
   
-  startX = pageX - scrollContainerRef.value.offsetLeft
+  const rect = scrollContainerRef.value.getBoundingClientRect()
+  startX = clientX - rect.left
   scrollLeftStart = scrollContainerRef.value.scrollLeft
 }
 
@@ -176,11 +181,12 @@ const onDrag = (e) => {
   if (!isDragging) return
   e.preventDefault()
   
-  const pageX = e.pageX || (e.touches && e.touches[0].pageX)
-  if (!pageX) return
+  const clientX = e.clientX || (e.touches && e.touches[0].clientX)
+  if (clientX === undefined) return
   
-  const x = pageX - scrollContainerRef.value.offsetLeft
-  const walk = (x - startX) * 1.5 // Multiplier speed sensitivity
+  const rect = scrollContainerRef.value.getBoundingClientRect()
+  const x = clientX - rect.left
+  const walk = (x - startX) * 1.5 // Drag sensitivity multiplier
   scrollContainerRef.value.scrollLeft = scrollLeftStart - walk
 }
 
