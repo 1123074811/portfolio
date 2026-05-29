@@ -189,6 +189,18 @@ const stopDrag = () => {
   }, 4500)
 }
 
+const onMouseEnter = () => {
+  isUserInteracting.value = true
+  stopAutoScroll()
+}
+
+const onMouseLeave = () => {
+  // Only resume if the user isn't actively dragging
+  if (isDragging) return
+  isUserInteracting.value = false
+  startAutoScroll()
+}
+
 const onDrag = (e) => {
   if (!isDragging) return
   e.preventDefault()
@@ -663,6 +675,8 @@ const resetForm = () => {
               style="-webkit-overflow-scrolling: touch; scroll-behavior: auto;"
               @mousedown="startDrag"
               @touchstart="startDrag"
+              @mouseenter="onMouseEnter"
+              @mouseleave="onMouseLeave"
             >
               
               <!-- First Copy -->
@@ -717,22 +731,11 @@ const resetForm = () => {
 </template>
 
 <style scoped>
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 28s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>
