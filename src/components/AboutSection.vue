@@ -334,15 +334,15 @@ onMounted(() => {
             
             <!-- 1. Months Header Row (Dynamically Aligned above columns) -->
             <div class="relative h-4 mb-2 select-none" style="padding-left: 28px;">
-              <span 
-                v-for="(week, wIdx) in calendarWeeks" 
-                :key="wIdx"
-                v-if="week.monthLabel"
-                class="absolute text-[10px] font-mono text-slate-400 dark:text-slate-500 leading-none transform -translate-x-1/2"
-                :style="{ left: `calc(28px + ${wIdx * 13}px)` }"
-              >
-                {{ week.monthLabel }}
-              </span>
+              <template v-for="(week, wIdx) in calendarWeeks" :key="wIdx">
+                <span 
+                  v-if="week.monthLabel"
+                  class="absolute text-[10px] font-mono text-slate-400 dark:text-slate-500 leading-none transform -translate-x-1/2"
+                  :style="{ left: `calc(28px + ${wIdx * 13}px)` }"
+                >
+                  {{ week.monthLabel }}
+                </span>
+              </template>
             </div>
 
             <!-- 2. Main Calendar Grid -->
