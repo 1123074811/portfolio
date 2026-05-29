@@ -2,7 +2,7 @@
 import { Bot, Layers, Zap, TrendingUp, Github } from 'lucide-vue-next'
 import { portfolioData } from '../data/portfolioData'
 import { locale, translations } from '../data/locale'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 const aboutMe = portfolioData.aboutMe
 const personalInfo = portfolioData.personalInfo
@@ -13,6 +13,95 @@ const iconMap = {
   Layers,
   Zap,
   TrendingUp
+}
+
+// Static Tailwind class maps to ensure dynamic class compiler safety and exact original GitHub green colors
+const cellBgClasses = {
+  level0: 'bg-[#ebedf0] dark:bg-[#161b22]',
+  level1: 'bg-[#9be9a8] dark:bg-[#0e4429]',
+  level2: 'bg-[#40c463] dark:bg-[#006d32]',
+  level3: 'bg-[#30a14e] dark:bg-[#26a641]',
+  level4: 'bg-[#216e39] dark:bg-[#39d353]'
+}
+
+// Live state fetched from public API
+const realContributions = ref(null)
+const isFetchingReal = ref(false)
+const totalCommitsCount = ref(1842) // Fallback/Live sum
+const currentStreak = ref(45)       // Fallback/Live streak
+
+const fetchGitHubContributions = async () => {
+  const username = personalInfo.github.split('/').pop()
+  if (!username) return
+  
+  isFetchingReal.value = true
+  
+  // Try jogruber API first (highly optimized endpoint used by standard react calendars)
+  try {
+    const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
+    if (!res.ok) throw new Error('Jogruber API returned non-200')
+    const data = await res.json()
+    
+    if (data && data.contributions && Array.isArray(data.contributions)) {
+      parseContributionsData(data.contributions, username)
+      return
+    }
+  } catch (err) {
+    console.warn("[GitHub API] Primary jogruber API failed, trying fallback. Error:", err)
+  }
+  
+  // Try deno.dev API (second choice)
+  try {
+    const res = await fetch(`https://github-contributions-api.deno.dev/v1/${username}`)
+    if (!res.ok) throw new Error('Deno API failed')
+    const data = await res.json()
+    
+    if (data && data.contributions && Array.isArray(data.contributions)) {
+      parseContributionsData(data.contributions, username)
+      return
+    }
+  } catch (err) {
+    console.warn("[GitHub API] Fallback API failed as well. Using high-fidelity simulation. Error:", err)
+  } finally {
+    isFetchingReal.value = false
+  }
+}
+
+const parseContributionsData = (contributions, username) => {
+  const contribMap = new Map()
+  let total = 0
+  
+  contributions.forEach(item => {
+    contribMap.set(item.date, {
+      count: item.count,
+      level: item.level
+    })
+    total += item.count
+  })
+  
+  realContributions.value = contribMap
+  if (total > 0) {
+    totalCommitsCount.value = total
+  }
+  
+  // Calculate real active streak dynamically by scanning backwards from today (max 365 days)
+  let streak = 0
+  let tempDate = new Date()
+  for (let i = 0; i < 365; i++) {
+    const dateStr = tempDate.toISOString().split('T')[0]
+    const dayData = contribMap.get(dateStr)
+    if (dayData && dayData.count > 0) {
+      streak++
+      tempDate.setDate(tempDate.getDate() - 1)
+    } else {
+      break
+    }
+  }
+  if (streak > 0) {
+    currentStreak.value = streak
+  }
+  
+  console.log(`[GitHub API] Successfully retrieved ${total} commits for ${username}. Current streak: ${streak} days.`)
 }
 
 // Generate high-fidelity contribution calendar data for exactly 364 days (52 weeks) up to today
@@ -42,39 +131,51 @@ const calendarWeeks = computed(() => {
         monthLabel = locale.value === 'zh' ? monthsZh[currentDate.getMonth()] : months[currentDate.getMonth()]
       }
       
-      // High-fidelity active pattern generator matching realistic commit profiles
       let count = 0
-      const isWeekend = d === 0 || d === 6
-      const rand = Math.random()
-      const mNum = currentDate.getMonth()
-      
-      let sprintFactor = 1.0
-      if (mNum >= 9 && mNum <= 11) sprintFactor = 1.6 // Heavy autumn project delivery sprint
-      if (mNum >= 2 && mNum <= 4) sprintFactor = 1.3  // Spring hackathons sprint
-      if (mNum === 1 || mNum === 7) sprintFactor = 0.4  // Quiet holiday seasons
-      
-      if (!isWeekend) {
-        if (rand < 0.15) count = 0
-        else if (rand < 0.55) count = Math.floor(Math.random() * 2) + 1 // 1-2 commits
-        else if (rand < 0.88) count = Math.floor(Math.random() * 3) + 3 // 3-5 commits
-        else count = Math.floor(Math.random() * 5) + 6 // 6-10 commits (Sprint)
-      } else {
-        if (rand < 0.75) count = 0
-        else count = Math.floor(Math.random() * 2) + 1 // 1-2 commits on weekends
-      }
-      
-      count = Math.floor(count * sprintFactor)
-      if (count < 0) count = 0
-      
-      // Level mapper matching GitHub standard values (0 to 4 levels)
       let level = 0
-      if (count === 0) level = 0
-      else if (count <= 2) level = 1
-      else if (count <= 4) level = 2
-      else if (count <= 6) level = 3
-      else level = 4
-      
       const isFuture = currentDate > now
+      
+      if (!isFuture) {
+        if (realContributions.value && realContributions.value.has(dateStr)) {
+          // A: Use Real GitHub Data
+          const realDay = realContributions.value.get(dateStr)
+          count = realDay.count
+          level = realDay.level
+        } else if (realContributions.value) {
+          // Real data loaded, but date is missing -> 0 commits
+          count = 0
+          level = 0
+        } else {
+          // B: High-fidelity active pattern generator fallback
+          const isWeekend = d === 0 || d === 6
+          const rand = Math.random()
+          const mNum = currentDate.getMonth()
+          
+          let sprintFactor = 1.0
+          if (mNum >= 9 && mNum <= 11) sprintFactor = 1.6 // Heavy autumn project delivery sprint
+          if (mNum >= 2 && mNum <= 4) sprintFactor = 1.3  // Spring hackathons sprint
+          if (mNum === 1 || mNum === 7) sprintFactor = 0.4  // Quiet holiday seasons
+          
+          if (!isWeekend) {
+            if (rand < 0.15) count = 0
+            else if (rand < 0.55) count = Math.floor(Math.random() * 2) + 1
+            else if (rand < 0.88) count = Math.floor(Math.random() * 3) + 3
+            else count = Math.floor(Math.random() * 5) + 6
+          } else {
+            if (rand < 0.75) count = 0
+            else count = Math.floor(Math.random() * 2) + 1
+          }
+          
+          count = Math.floor(count * sprintFactor)
+          if (count < 0) count = 0
+          
+          if (count === 0) level = 0
+          else if (count <= 2) level = 1
+          else if (count <= 4) level = 2
+          else if (count <= 6) level = 3
+          else level = 4
+        }
+      }
       
       days.push({
         date: new Date(currentDate),
@@ -95,21 +196,6 @@ const calendarWeeks = computed(() => {
   return weeks
 })
 
-const getCellBgClass = (level) => {
-  switch (level) {
-    case 1:
-      return 'bg-[#9be9a8] dark:bg-[#0e4429]'
-    case 2:
-      return 'bg-[#40c463] dark:bg-[#006d32]'
-    case 3:
-      return 'bg-[#30a14e] dark:bg-[#26a641]'
-    case 4:
-      return 'bg-[#216e39] dark:bg-[#39d353]'
-    default:
-      return 'bg-[#ebedf0] dark:bg-[#161b22]'
-  }
-}
-
 const getTooltipText = (day) => {
   if (!day || day.count === null) return ''
   const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' }
@@ -121,6 +207,10 @@ const getTooltipText = (day) => {
     return `${day.count === 0 ? 'No' : day.count} contribution${day.count === 1 ? '' : 's'} on ${formattedDate}`
   }
 }
+
+onMounted(() => {
+  fetchGitHubContributions()
+})
 </script>
 
 <template>
@@ -224,7 +314,7 @@ const getTooltipText = (day) => {
 
         <!-- Chart Grid Wrapper (Handles Overflow on Mobile & Exactly matches screenshot) -->
         <div class="w-full overflow-x-auto overflow-y-hidden py-4 scrollbar-thin">
-          <div class="min-w-[720px] max-w-[840px] mx-auto p-4 rounded-xl border border-slate-100 dark:border-slate-900/60 bg-white dark:bg-slate-950/40 shadow-inner">
+          <div class="github-calendar min-w-[720px] max-w-[840px] mx-auto p-4 rounded-xl border border-slate-100 dark:border-slate-900/60 bg-white dark:bg-slate-950/40 shadow-inner">
             
             <!-- 1. Months Header Row (Dynamically Aligned above columns) -->
             <div class="relative h-4 mb-2 select-none" style="padding-left: 28px;">
@@ -261,12 +351,12 @@ const getTooltipText = (day) => {
                   class="flex flex-col" 
                   style="gap: 3px;"
                 >
-                  <!-- Individual Day Cells (Level 0 - 4 greens) -->
+                  <!-- Individual Day Cells (Level 0 - 4 greens via scoped CSS variables) -->
                   <div 
                     v-for="(day, dIdx) in week.days" 
                     :key="dIdx"
                     class="w-2.5 h-2.5 rounded-[1.5px] transition-all duration-300 relative group/cell cursor-pointer hover:ring-1 hover:ring-cyber-violet/50"
-                    :class="[getCellBgClass(day.level)]"
+                    :style="{ backgroundColor: 'var(--github-l' + (day.level !== null ? day.level : 0) + ')' }"
                   >
                     <!-- Custom Tooltip element appearing on hover -->
                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/cell:block z-50 bg-slate-900/95 dark:bg-slate-950/95 text-white font-mono text-[9px] px-2 py-1 rounded-md shadow-xl whitespace-nowrap pointer-events-none border border-slate-700/80 backdrop-blur-sm">
@@ -291,11 +381,11 @@ const getTooltipText = (day) => {
               <!-- Less / More Green Grid legend -->
               <div class="flex items-center space-x-1.5">
                 <span>Less</span>
-                <div class="w-2.5 h-2.5 rounded-[1.5px] bg-[#ebedf0] dark:bg-[#161b22] border border-slate-200/10"></div>
-                <div class="w-2.5 h-2.5 rounded-[1.5px] bg-[#9be9a8] dark:bg-[#0e4429]"></div>
-                <div class="w-2.5 h-2.5 rounded-[1.5px] bg-[#40c463] dark:bg-[#006d32]"></div>
-                <div class="w-2.5 h-2.5 rounded-[1.5px] bg-[#30a14e] dark:bg-[#26a641]"></div>
-                <div class="w-2.5 h-2.5 rounded-[1.5px] bg-[#216e39] dark:bg-[#39d353]"></div>
+                <div class="w-2.5 h-2.5 rounded-[1.5px] border border-slate-200/10" :style="{ backgroundColor: 'var(--github-l0)' }"></div>
+                <div class="w-2.5 h-2.5 rounded-[1.5px]" :style="{ backgroundColor: 'var(--github-l1)' }"></div>
+                <div class="w-2.5 h-2.5 rounded-[1.5px]" :style="{ backgroundColor: 'var(--github-l2)' }"></div>
+                <div class="w-2.5 h-2.5 rounded-[1.5px]" :style="{ backgroundColor: 'var(--github-l3)' }"></div>
+                <div class="w-2.5 h-2.5 rounded-[1.5px]" :style="{ backgroundColor: 'var(--github-l4)' }"></div>
                 <span>More</span>
               </div>
             </div>
@@ -310,7 +400,7 @@ const getTooltipText = (day) => {
               {{ locale === 'zh' ? '全年度总提交' : 'TOTAL COMMITS' }}
             </div>
             <div class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono mt-1">
-              1,842+
+              {{ totalCommitsCount }}+
             </div>
           </div>
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/30 text-center">
@@ -326,7 +416,7 @@ const getTooltipText = (day) => {
               {{ locale === 'zh' ? '当前连续提交' : 'CURRENT STREAK' }}
             </div>
             <div class="text-xl sm:text-2xl font-black text-cyber-violet dark:text-cyber-cyan font-mono mt-1">
-              45 Days
+              {{ currentStreak }} {{ locale === 'zh' ? '天' : 'Days' }}
             </div>
           </div>
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/30 text-center">
@@ -343,3 +433,21 @@ const getTooltipText = (day) => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.github-calendar {
+  --github-l0: #ebedf0;
+  --github-l1: #9be9a8;
+  --github-l2: #40c463;
+  --github-l3: #30a14e;
+  --github-l4: #216e39;
+}
+
+:global(.dark) .github-calendar {
+  --github-l0: #161b22;
+  --github-l1: #0e4429;
+  --github-l2: #006d32;
+  --github-l3: #26a641;
+  --github-l4: #39d353;
+}
+</style>
