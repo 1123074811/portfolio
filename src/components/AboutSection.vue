@@ -24,11 +24,23 @@ const cellBgClasses = {
   level4: 'bg-[#216e39] dark:bg-[#39d353]'
 }
 
+// Toggle to false when you want to connect to real GitHub API dynamically at runtime
+const useSimulatedData = ref(true)
+
 // Live state fetched from public API
 const realContributions = ref(null)
 const isFetchingReal = ref(false)
 const totalCommitsCount = ref(1842) // Fallback/Live sum
 const currentStreak = ref(45)       // Fallback/Live streak
+
+// Generate deterministic pseudo-random floats [0, 1] based on date strings to keep mock calendar grids stable across page reloads
+const getDeterministicRandom = (str) => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return Math.abs(Math.sin(hash))
+}
 
 const fetchGitHubContributions = async () => {
   const username = personalInfo.github.split('/').pop()
@@ -136,19 +148,19 @@ const calendarWeeks = computed(() => {
       const isFuture = currentDate > now
       
       if (!isFuture) {
-        if (realContributions.value && realContributions.value.has(dateStr)) {
+        if (!useSimulatedData.value && realContributions.value && realContributions.value.has(dateStr)) {
           // A: Use Real GitHub Data
           const realDay = realContributions.value.get(dateStr)
           count = realDay.count
           level = realDay.level
-        } else if (realContributions.value) {
+        } else if (!useSimulatedData.value && realContributions.value) {
           // Real data loaded, but date is missing -> 0 commits
           count = 0
           level = 0
         } else {
-          // B: High-fidelity active pattern generator fallback
+          // B: High-fidelity active pattern generator fallback (Deterministic date-based hash)
           const isWeekend = d === 0 || d === 6
-          const rand = Math.random()
+          const rand = getDeterministicRandom(dateStr)
           const mNum = currentDate.getMonth()
           
           let sprintFactor = 1.0
@@ -158,12 +170,12 @@ const calendarWeeks = computed(() => {
           
           if (!isWeekend) {
             if (rand < 0.15) count = 0
-            else if (rand < 0.55) count = Math.floor(Math.random() * 2) + 1
-            else if (rand < 0.88) count = Math.floor(Math.random() * 3) + 3
-            else count = Math.floor(Math.random() * 5) + 6
+            else if (rand < 0.55) count = Math.floor(getDeterministicRandom(dateStr + '-sub1') * 2) + 1
+            else if (rand < 0.88) count = Math.floor(getDeterministicRandom(dateStr + '-sub2') * 3) + 3
+            else count = Math.floor(getDeterministicRandom(dateStr + '-sub3') * 5) + 6
           } else {
             if (rand < 0.75) count = 0
-            else count = Math.floor(Math.random() * 2) + 1
+            else count = Math.floor(getDeterministicRandom(dateStr + '-sub4') * 2) + 1
           }
           
           count = Math.floor(count * sprintFactor)
@@ -209,7 +221,11 @@ const getTooltipText = (day) => {
 }
 
 onMounted(() => {
-  fetchGitHubContributions()
+  if (!useSimulatedData.value) {
+    fetchGitHubContributions()
+  } else {
+    console.log("[GitHub Calendar] Operating in offline simulation mode.")
+  }
 })
 </script>
 
