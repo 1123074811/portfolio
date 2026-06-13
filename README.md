@@ -2,6 +2,10 @@
 
 一个基于 **Vue 3 + Vite + Tailwind CSS** 构建的现代化个人项目作品集网站，面向求职展示、项目复盘、技术能力呈现与个人品牌建设。网站重点突出 **AI 应用开发、Vibe Coding、Web 全栈项目、效率工具与技术分享**，支持中英文双语切换、深浅色主题、项目独立详情页、多媒体项目展示和打印版在线简历。
 
+> **两大新特性**
+> - 🎨 **双视觉主题，配置一键切换**：经典 Cyber 多分区版 ↔ 无限画廊作品墙（深暖底 3D 倾斜卡片墙）。改 `src/config/siteConfig.js` 一个字段即可整站换肤。
+> - 🤖 **GitHub 准实时自动同步**：GitHub Actions 定时拉取你的公开仓库 → DeepSeek 生成中英文案 → 自动更新项目卡片与「GitHub 动态」板块。详见 [docs/github-sync.md](docs/github-sync.md)。
+
 ---
 
 ## 项目亮点
@@ -127,51 +131,64 @@ public/resume.html
 
 ```text
 portfolio/
+├── .github/
+│   └── workflows/
+│       └── refresh.yml                # CI：定时拉 GitHub 数据 + 构建 + 部署 Pages
 ├── docs/
-│   └── portfolio-requirements.md      # 项目需求与开发记录文档
+│   ├── portfolio-requirements.md      # 项目需求与开发记录文档
+│   └── github-sync.md                 # GitHub 自动同步机制说明与启用步骤
+├── scripts/
+│   └── generate-portfolio.mjs         # GitHub 拉取 + DeepSeek 文案生成器（零依赖）
 ├── public/
 │   └── resume.html                    # 可打印在线简历页面
 ├── src/
 │   ├── assets/                        # 静态资源
 │   ├── components/                    # 页面组件
-│   │   ├── AboutSection.vue           # 关于我模块
-│   │   ├── BlogSection.vue            # 技术分享模块
-│   │   ├── ContactSection.vue         # 联系模块
-│   │   ├── ExperienceSection.vue      # 成长轨迹模块
-│   │   ├── Footer.vue                 # 页脚与访客监控面板
-│   │   ├── HeroSection.vue            # 首屏展示与打字机动效
-│   │   ├── Navbar.vue                 # 顶部导航与语言切换
-│   │   ├── ProjectCard.vue            # 项目卡片
-│   │   ├── ProjectDetailsPage.vue     # 独立项目详情页
-│   │   ├── ProjectFilter.vue          # 项目分类筛选
-│   │   ├── ProjectModal.vue           # 历史弹窗详情组件，当前主流程已改为独立详情页
-│   │   ├── ProjectSection.vue         # 项目列表模块
-│   │   └── SkillsSection.vue          # 技能工具箱模块
+│   │   ├── ...（经典版各 Section 组件，见下）
+│   │   ├── GalleryHome.vue            # 【画廊版】无限画廊作品墙 + GitHub 动态板块
+│   │   ├── ProjectDetailsPage.vue     # 独立项目详情页（经典版）
+│   │   └── SkillsSection.vue          # 技能工具箱模块 等
+│   ├── config/
+│   │   └── siteConfig.js              # 站点配置：主题切换 + GitHub 同步设置
 │   ├── data/
 │   │   ├── locale.js                  # 国际化状态与详情页状态控制
-│   │   └── portfolioData.js           # 个人信息、项目、技能、经历、博客等数据
-│   ├── App.vue                        # 应用根组件
+│   │   ├── portfolioData.js           # 手填数据（个人信息/技能/经历/博客 + 项目兜底）
+│   │   ├── githubData.json            # GitHub 自动生成数据（CI 写入，回退用空占位）
+│   │   └── portfolio.js               # 统一数据出口：自动数据优先，回退手填
+│   ├── App.vue                        # 应用根组件（按 siteConfig.theme 分流主题）
 │   ├── main.js                        # 应用入口
 │   └── style.css                      # 全局样式与 Tailwind 引入
+├── 启动开发服务器.bat                  # 双击启动开发服务器（Windows）
 ├── .gitignore                         # Git 忽略规则
 ├── index.html                         # Vite HTML 入口与 SEO Meta
 ├── package.json                       # 项目依赖与脚本
 ├── postcss.config.js                  # PostCSS 配置
 ├── tailwind.config.js                 # Tailwind CSS 配置
-└── vite.config.js                     # Vite 配置
+└── vite.config.js                     # Vite 配置（支持 GitHub Pages base 路径）
 ```
 
 ---
 
 ## 快速开始
 
-### 1. 安装依赖
+### 🚀 最简单：双击启动（Windows 推荐）
+
+直接双击项目根目录的 **`启动开发服务器.bat`** 即可：
+- 首次运行会自动安装依赖；
+- 自动拉起 Vite 并**打开浏览器**；
+- 关闭弹出的命令窗口即停止服务。
+
+> 想要更顺手：右键 `启动开发服务器.bat` → 发送到 → 桌面快捷方式，以后桌面双击即可启动。
+
+### 命令行方式
+
+#### 1. 安装依赖
 
 ```bash
 npm install
 ```
 
-### 2. 启动开发服务器
+#### 2. 启动开发服务器
 
 ```bash
 npm run dev
@@ -209,17 +226,72 @@ npm run preview
 {
   "dev": "vite",
   "build": "vite build",
-  "preview": "vite preview"
+  "preview": "vite preview",
+  "generate": "node scripts/generate-portfolio.mjs"
 }
 ```
 
 - `npm run dev`：启动本地开发环境。
 - `npm run build`：生成生产环境静态文件。
 - `npm run preview`：本地预览构建后的站点。
+- `npm run generate`：手动拉取 GitHub 数据并生成 `src/data/githubData.json`（需配 `DEEPSEEK_API_KEY` 环境变量；详见 GitHub 自动同步章节）。
+
+---
+
+## 双视觉主题切换
+
+项目内置两套完全不同的视觉风格，共用同一份数据，互不影响。切换只需改 `src/config/siteConfig.js` 一个字段：
+
+```js
+export const siteConfig = {
+  theme: 'gallery', // 'classic' | 'gallery'
+}
+```
+
+| 主题 | 说明 |
+| --- | --- |
+| `classic` | 经典版：Cyber 霓虹暗黑多分区主页（Hero / About / Projects / Skills / Blog / Experience / Contact + 独立详情页） |
+| `gallery` | 画廊版：无限画廊作品墙——深暖底 3D 倾斜卡片墙、对角无缝漂移、悬停暂停、点击查看详情，内置「GitHub 动态」板块 |
+
+`App.vue` 根据 `siteConfig.theme` 分流渲染对应主题组件。
+
+---
+
+## GitHub 自动同步
+
+让作品集**准实时**反映 GitHub：GitHub Actions 定时拉取公开仓库 → DeepSeek 生成中英文案 → 自动更新项目卡片与「GitHub 动态」板块（语言占比 / 最近活跃 / followers / star）。
+
+**数据流**：
+
+```
+GitHub Actions（每天 cron / push / 手动）
+  └─ scripts/generate-portfolio.mjs
+        拉仓库 → 智能筛选 → DeepSeek 写中英文案（增量缓存省钱）→ src/data/githubData.json
+  └─ vite build → 部署 GitHub Pages
+```
+
+**数据合并**（`src/data/portfolio.js`）：GitHub 自动数据优先，没有则回退手填的 `portfolioData.js`；技能 / 履历 / 求职意向等始终手填。任何阶段网站都能正常渲染。
+
+**启用三步**（完整说明见 [docs/github-sync.md](docs/github-sync.md)）：
+
+1. `src/config/siteConfig.js` → `github.username` 填**真实 GitHub 登录名**（主页 URL `github.com/<这里>` 的那段，只能英文/数字/连字符）。
+2. 仓库 Settings → Secrets and variables → Actions：Secrets 加 `DEEPSEEK_API_KEY`；Variables 加 `VITE_BASE`（项目页填 `/<仓库名>/`，用户主页留空）。
+3. Settings → Pages → Source 选 **GitHub Actions**，推送触发。
+
+**本地手动生成**：
+
+```bash
+# Windows PowerShell
+$env:DEEPSEEK_API_KEY="sk-xxx"; $env:GITHUB_USERNAME="你的登录名"; npm run generate
+```
+
+无 `DEEPSEEK_API_KEY` 时会退回用仓库 description / README 摘要充当文案（接口已预留，配上 key 即升级为 AI 文案）。
 
 ---
 
 ## 内容配置说明
+
+> 接入 GitHub 自动同步后，**项目列表**由 `src/data/githubData.json` 自动生成；下方手填方式作为兜底（首次 CI 跑之前、或未启用同步时生效）。个人信息、技能、经历、博客等仍由 `portfolioData.js` 维护。
 
 网站的绝大部分内容由 `src/data/portfolioData.js` 驱动，包括：
 
@@ -351,6 +423,20 @@ dark:border-*
 ```
 
 用于在亮色与暗色主题下保持一致的视觉层级。
+
+---
+
+## 部署到 GitHub Pages（推荐，自带自动同步）
+
+项目已内置 `.github/workflows/refresh.yml`，开箱即用：
+
+1. 仓库 Settings → Pages → Source 选 **GitHub Actions**。
+2. 配置 Secret `DEEPSEEK_API_KEY` 与 Variable `VITE_BASE`（项目页填 `/<仓库名>/`）。
+3. 推送到 `main`，或在 Actions 页面手动 `Run workflow`。
+
+之后每天 UTC 22:00（北京时间次日 06:00）自动重建，拉取最新 GitHub 数据并部署。详见 [docs/github-sync.md](docs/github-sync.md)。
+
+> `GITHUB_TOKEN` 由 Actions 自动注入，无需手动配置（读公开仓库足够）。
 
 ---
 

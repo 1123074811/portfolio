@@ -51,3 +51,6 @@ dist-ssr/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# GitHub 自动同步：AI 文案缓存（CI 用 actions/cache 持久化）
+scripts/.cache/
