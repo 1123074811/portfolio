@@ -1,0 +1,69 @@
+name: Refresh & Deploy Portfolio
+
+# 准实时：每天 UTC 22:00（北京时间次日 6:00）自动重建；也可手动触发 / push 触发
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 持久化 AI 文案缓存：仓库内容没变就不重复调 DeepSeek，省钱
+      - name: Restore AI cache
+        uses: actions/cache@v4
+        with:
+          path: scripts/.cache
+          key: ai-cache-${{ github.run_id }}
+          restore-keys: ai-cache-
+
+      - run: npm ci
+
+      # 拉 GitHub 数据 + DeepSeek 生成文案 → src/data/githubData.json
+      - name: Generate portfolio data from GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          # 可选：覆盖 siteConfig.js 里的 username
+          GITHUB_USERNAME: ${{ vars.GITHUB_USERNAME }}
+        run: node scripts/generate-portfolio.mjs
+
+      - name: Build
+        env:
+          # 项目页部署到 username.github.io/<仓库名>/ 时设为 '/<仓库名>/'；
+          # 用户主页(username.github.io)留空即可。在仓库 Variables 配 VITE_BASE。
+          VITE_BASE: ${{ vars.VITE_BASE || '/' }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
