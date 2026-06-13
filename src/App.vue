@@ -9,11 +9,17 @@ import ExperienceSection from './components/ExperienceSection.vue'
 import ContactSection from './components/ContactSection.vue'
 import Footer from './components/Footer.vue'
 import ProjectDetailsPage from './components/ProjectDetailsPage.vue'
+import GalleryHome from './components/GalleryHome.vue'
 import { currentProject } from './data/locale'
+import { siteConfig } from './config/siteConfig'
 </script>
 
 <template>
-  <div class="min-h-screen relative flex flex-col justify-between overflow-x-hidden bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+  <!-- ════ 画廊版：无限画廊作品墙（在 src/config/siteConfig.js 切换 theme） ════ -->
+  <GalleryHome v-if="siteConfig.theme === 'gallery'" />
+
+  <!-- ════ 经典版：Cyber 霓虹暗黑多分区主页 ════ -->
+  <div v-else class="min-h-screen relative flex flex-col justify-between overflow-x-hidden bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
     
     <!-- Top Fixed Navigation -->
     <Navbar />
