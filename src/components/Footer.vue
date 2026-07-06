@@ -1,10 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Github, Mail, ArrowUp, Cpu, Monitor, Eye, Users, ShieldCheck } from 'lucide-vue-next'
-import { portfolioData } from '../data/portfolioData'
+import { personalInfo } from '../data/portfolio'
 import { locale, translations } from '../data/locale'
 
-const personalInfo = portfolioData.personalInfo
 const currentYear = new Date().getFullYear()
 
 const todayVisits = ref(142)

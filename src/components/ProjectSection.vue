@@ -1,14 +1,13 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { portfolioData } from '../data/portfolioData'
+import { projects, categories as categoriesZh, categoriesEn } from '../data/portfolio'
 import ProjectCard from './ProjectCard.vue'
 import ProjectFilter from './ProjectFilter.vue'
 import { Sparkles, Compass, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import { locale, translations, openProjectDetails } from '../data/locale'
 import { trackFilterClick } from '../utils/telemetry'
 
-const projects = portfolioData.projects
-const categories = computed(() => locale.value === 'zh' ? portfolioData.categories : portfolioData.categoriesEn)
+const categories = computed(() => locale.value === 'zh' ? categoriesZh : categoriesEn)
 
 const activeCategory = ref('全部')
 const isExpanded = ref(false)

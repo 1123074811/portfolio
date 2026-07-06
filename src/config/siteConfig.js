@@ -22,7 +22,7 @@ export const siteConfig = {
    */
   github: {
     // ⚠️ 必填：你的 GitHub 登录名（主页 URL github.com/<这里> 的那段，只能英文/数字/连字符）
-    username: 'vibe-coder',
+    username: '1123074811',
 
     // 仓库智能筛选规则
     filter: {

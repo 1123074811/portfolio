@@ -1,7 +1,349 @@
 {
-  "generatedAt": null,
-  "username": null,
-  "profile": null,
-  "activity": null,
-  "projects": []
+  "generatedAt": "2026-07-06T11:15:17.993Z",
+  "username": "1123074811",
+  "profile": {
+    "name": "哈基聪",
+    "login": "1123074811",
+    "avatar": "https://avatars.githubusercontent.com/u/204170127?v=4",
+    "bio": null,
+    "followers": 1,
+    "following": 1,
+    "publicRepos": 18,
+    "htmlUrl": "https://github.com/1123074811",
+    "company": null,
+    "location": null,
+    "blog": ""
+  },
+  "activity": {
+    "languages": [
+      {
+        "name": "Python",
+        "percent": 28.3,
+        "color": "#3572A5"
+      },
+      {
+        "name": "TypeScript",
+        "percent": 26,
+        "color": "#3178c6"
+      },
+      {
+        "name": "Vue",
+        "percent": 17.3,
+        "color": "#41b883"
+      },
+      {
+        "name": "Java",
+        "percent": 15.2,
+        "color": "#b07219"
+      },
+      {
+        "name": "HTML",
+        "percent": 8.5,
+        "color": "#e34c26"
+      },
+      {
+        "name": "JavaScript",
+        "percent": 2.8,
+        "color": "#f1e05a"
+      }
+    ],
+    "recent": [
+      {
+        "name": "blog-forum-system",
+        "url": "https://github.com/1123074811/blog-forum-system",
+        "pushedAt": "2026-07-06T09:33:31Z",
+        "language": "Vue",
+        "description": "",
+        "stars": 1
+      },
+      {
+        "name": "AlgoViz",
+        "url": "https://github.com/1123074811/AlgoViz",
+        "pushedAt": "2026-06-17T15:52:46Z",
+        "language": "TypeScript",
+        "description": "",
+        "stars": 0
+      },
+      {
+        "name": "portfolio",
+        "url": "https://github.com/1123074811/portfolio",
+        "pushedAt": "2026-06-13T14:45:28Z",
+        "language": "Vue",
+        "description": "",
+        "stars": 0
+      },
+      {
+        "name": "desk-pet",
+        "url": "https://github.com/1123074811/desk-pet",
+        "pushedAt": "2026-06-13T14:20:27Z",
+        "language": "TypeScript",
+        "description": "",
+        "stars": 0
+      },
+      {
+        "name": "Prompt-Management",
+        "url": "https://github.com/1123074811/Prompt-Management",
+        "pushedAt": "2026-06-01T11:19:43Z",
+        "language": "TypeScript",
+        "description": "",
+        "stars": 0
+      },
+      {
+        "name": "xianguoji",
+        "url": "https://github.com/1123074811/xianguoji",
+        "pushedAt": "2026-05-24T11:34:03Z",
+        "language": "Java",
+        "description": "",
+        "stars": 0
+      }
+    ],
+    "totalStars": 1
+  },
+  "projects": [
+    {
+      "id": "blog-forum-system",
+      "title": "blog-forum-system",
+      "titleEn": "blog-forum-system",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Vue",
+        "Java",
+        "JavaScript",
+        "Shell"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/4265d479aa4542fc/1123074811/blog-forum-system",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/blog-forum-system",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 1,
+      "language": "Vue",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "algoviz",
+      "title": "AlgoViz",
+      "titleEn": "AlgoViz",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "TypeScript",
+        "HTML",
+        "JavaScript",
+        "CSS"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/98b3c7151854adef/1123074811/AlgoViz",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/AlgoViz",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "portfolio",
+      "title": "portfolio",
+      "titleEn": "portfolio",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Vue",
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/0248620d3c21edcd/1123074811/portfolio",
+      "demoUrl": "https://portfolio-green-zeta-30.vercel.app",
+      "sourceUrl": "https://github.com/1123074811/portfolio",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "Vue",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "desk-pet",
+      "title": "desk-pet",
+      "titleEn": "desk-pet",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "TypeScript",
+        "CSS",
+        "JavaScript",
+        "HTML"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/6e512a7bd472a9a5/1123074811/desk-pet",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/desk-pet",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "prompt-management",
+      "title": "Prompt-Management",
+      "titleEn": "Prompt-Management",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "TypeScript"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/9520f48502dad04d/1123074811/Prompt-Management",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/Prompt-Management",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "TypeScript",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "xianguoji",
+      "title": "xianguoji",
+      "titleEn": "xianguoji",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Java",
+        "HTML",
+        "Vue",
+        "TypeScript"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/1664346a2bf2a56f/1123074811/xianguoji",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/xianguoji",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "Java",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "llm-inspector",
+      "title": "llm-inspector",
+      "titleEn": "llm-inspector",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "AI 应用",
+      "categoryEn": "AI Apps",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Python",
+        "JavaScript",
+        "CSS",
+        "HTML"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/663684e73055bc1c/1123074811/llm-inspector",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/llm-inspector",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "Python",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "llm-inspector-test",
+      "title": "llm-inspector-test",
+      "titleEn": "llm-inspector-test",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "AI 应用",
+      "categoryEn": "AI Apps",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Python",
+        "HTML",
+        "TypeScript",
+        "PowerShell"
+      ],
+      "coverImage": "https://opengraph.githubassets.com/1d868d1e60e53f80/1123074811/llm-inspector-test",
+      "demoUrl": "#",
+      "sourceUrl": "https://github.com/1123074811/llm-inspector-test",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
+      "language": "Python",
+      "topics": [],
+      "featured": true
+    }
+  ]
 }

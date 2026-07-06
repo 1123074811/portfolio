@@ -70,7 +70,7 @@ const getProjectReadme = computed(() => {
   const tech = props.project.techStack || []
   const year = props.project.year || "2026"
   const repoName = props.project.id ? props.project.id.toLowerCase() : "project-repository"
-  const githubUrl = props.project.sourceUrl && props.project.sourceUrl !== "#" ? props.project.sourceUrl : `https://github.com/vibe-coder/${repoName}`
+  const githubUrl = props.project.sourceUrl && props.project.sourceUrl !== "#" ? props.project.sourceUrl : `https://github.com/1123074811/${repoName}`
   const demoUrl = props.project.demoUrl && props.project.demoUrl !== "#" ? props.project.demoUrl : `https://${repoName}.vibe.dev`
 
   if (isZh) {

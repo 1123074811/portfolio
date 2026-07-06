@@ -250,7 +250,7 @@ onMounted(() => {
         <!-- Left Column: Biography -->
         <div class="lg:col-span-5 space-y-6 text-left">
           <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-            <span>{{ locale === 'zh' ? '我是 陈俊杰' : 'I am Alex Chen' }}</span>
+            <span>{{ locale === 'zh' ? '我是 哈基聪' : 'I am 1123074811' }}</span>
             <span class="text-xs px-2.5 py-0.5 rounded-full bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/20 font-mono font-semibold">{{ locale === 'zh' ? 'Vibe Coding 程序员' : 'Vibe Coder' }}</span>
           </h3>
           

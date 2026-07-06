@@ -1,11 +1,10 @@
 <script setup>
 import { Mail, Github, Chrome, Copy, Check, Send, Sparkles, User, RefreshCw, MessageSquare } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { portfolioData } from '../data/portfolioData'
+import { personalInfo } from '../data/portfolio'
 import { locale, translations } from '../data/locale'
 import { trackFormSubmission } from '../utils/telemetry'
 
-const personalInfo = portfolioData.personalInfo
 const copied = ref(false)
 
 // Form states - Preloaded from localStorage for guest convenience
