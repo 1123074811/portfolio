@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: portfolio-deploy
   cancel-in-progress: true
 
 jobs:
@@ -49,16 +49,23 @@ jobs:
 
       - name: Build
         env:
-          # 项目页部署到 username.github.io/<仓库名>/ 时设为 '/<仓库名>/'；
-          # 用户主页(username.github.io)留空即可。在仓库 Variables 配 VITE_BASE。
-          VITE_BASE: ${{ vars.VITE_BASE || '/' }}
+          # 默认走相对路径 './'，同一份 dist 可部署到 GitHub Pages 项目页和国内 CDN。
+          # 如国内 CDN 固定在某个子路径，也可在仓库 Variables 设置 VITE_BASE 覆盖。
+          VITE_BASE: ${{ vars.VITE_BASE }}
         run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
-  deploy:
+      - name: Upload static dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
+          if-no-files-found: error
+
+  deploy-pages:
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -67,3 +74,60 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-domestic-cdn:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ vars.DOMESTIC_DEPLOY_ENABLED == 'true' }}
+    env:
+      DOMESTIC_S3_PROVIDER: ${{ vars.DOMESTIC_S3_PROVIDER }}
+      DOMESTIC_S3_ENDPOINT: ${{ vars.DOMESTIC_S3_ENDPOINT }}
+      DOMESTIC_S3_REGION: ${{ vars.DOMESTIC_S3_REGION }}
+      DOMESTIC_S3_BUCKET: ${{ vars.DOMESTIC_S3_BUCKET }}
+      DOMESTIC_S3_PREFIX: ${{ vars.DOMESTIC_S3_PREFIX }}
+      DOMESTIC_S3_ACCESS_KEY_ID: ${{ secrets.DOMESTIC_S3_ACCESS_KEY_ID }}
+      DOMESTIC_S3_SECRET_ACCESS_KEY: ${{ secrets.DOMESTIC_S3_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Download static dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
+
+      - name: Validate domestic CDN config
+        run: |
+          test -n "$DOMESTIC_S3_PROVIDER"
+          test -n "$DOMESTIC_S3_ENDPOINT"
+          test -n "$DOMESTIC_S3_BUCKET"
+          test -n "$DOMESTIC_S3_ACCESS_KEY_ID"
+          test -n "$DOMESTIC_S3_SECRET_ACCESS_KEY"
+
+      - name: Install rclone
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+
+      - name: Sync dist to domestic OSS/COS bucket
+        run: |
+          mkdir -p ~/.config/rclone
+          cat > ~/.config/rclone/rclone.conf <<EOF
+          [domestic]
+          type = s3
+          provider = ${DOMESTIC_S3_PROVIDER}
+          access_key_id = ${DOMESTIC_S3_ACCESS_KEY_ID}
+          secret_access_key = ${DOMESTIC_S3_SECRET_ACCESS_KEY}
+          endpoint = ${DOMESTIC_S3_ENDPOINT}
+          region = ${DOMESTIC_S3_REGION}
+          acl = public-read
+          EOF
+
+          TARGET="domestic:${DOMESTIC_S3_BUCKET}"
+          if [ -n "$DOMESTIC_S3_PREFIX" ]; then
+            TARGET="${TARGET}/${DOMESTIC_S3_PREFIX}"
+          fi
+
+          rclone sync dist "$TARGET" \
+            --s3-no-check-bucket \
+            --transfers 16 \
+            --checkers 32 \
+            --fast-list \
+            --delete-excluded

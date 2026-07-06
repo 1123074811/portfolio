@@ -14,7 +14,7 @@ GitHub Actions（每天 cron / push / 手动触发）
        5. DeepSeek 读 README → 生成中英 title/subtitle/description/highlights + 自动归类
        6. 汇总语言占比 / 最近活跃 / followers
        7. 写出 src/data/githubData.json
-  └─ vite build → 部署到 GitHub Pages
+  └─ vite build → 部署到 GitHub Pages（备用）+ 可选同步国内 OSS/COS + CDN
 ```
 
 数据合并见 `src/data/portfolio.js`：**GitHub 自动数据优先，没有则回退手填的 `portfolioData.js`**。
@@ -31,7 +31,7 @@ GitHub Actions（每天 cron / push / 手动触发）
 - **Secrets** 新增 `DEEPSEEK_API_KEY` = 你的 DeepSeek API Key（https://platform.deepseek.com）
 - **Variables**（可选）：
   - `GITHUB_USERNAME` = 登录名（覆盖配置文件，方便不改代码）
-  - `VITE_BASE` = `/<仓库名>/`（**项目页**部署必填，如 `/portfolio/`；若是 `username.github.io` 用户主页则留空）
+  - `VITE_BASE` = 自定义资源基础路径。默认 `./`，通常不需要配置；只有 CDN 固定要求绝对子路径时才填写。
 
 > `GITHUB_TOKEN` 无需手动配，Actions 自动注入（读公开仓库足够）。
 
@@ -40,6 +40,16 @@ GitHub Actions（每天 cron / push / 手动触发）
 
 ### 4. 触发
 推送到 `main`，或 Actions 页面手动 `Run workflow`。之后每天自动重建。
+
+## 国内 CDN 部署
+
+如果要规避国内访问 GitHub Pages 不稳定的问题，推荐启用：
+
+```text
+GitHub Actions 生成数据和构建 dist -> 同步到国内 OSS/COS -> CDN 回源 OSS/COS
+```
+
+配置方式见 `docs/domestic-cdn-deploy.md`。
 
 ## 本地测试
 

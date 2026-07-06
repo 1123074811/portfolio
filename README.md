@@ -267,7 +267,7 @@ export const siteConfig = {
 GitHub Actions（每天 cron / push / 手动）
   └─ scripts/generate-portfolio.mjs
         拉仓库 → 智能筛选 → DeepSeek 写中英文案（增量缓存省钱）→ src/data/githubData.json
-  └─ vite build → 部署 GitHub Pages
+  └─ vite build → 部署 GitHub Pages（备用）+ 可选同步国内 OSS/COS + CDN
 ```
 
 **数据合并**（`src/data/portfolio.js`）：GitHub 自动数据优先，没有则回退手填的 `portfolioData.js`；技能 / 履历 / 求职意向等始终手填。任何阶段网站都能正常渲染。
@@ -275,8 +275,10 @@ GitHub Actions（每天 cron / push / 手动）
 **启用三步**（完整说明见 [docs/github-sync.md](docs/github-sync.md)）：
 
 1. `src/config/siteConfig.js` → `github.username` 填**真实 GitHub 登录名**（主页 URL `github.com/<这里>` 的那段，只能英文/数字/连字符）。
-2. 仓库 Settings → Secrets and variables → Actions：Secrets 加 `DEEPSEEK_API_KEY`；Variables 加 `VITE_BASE`（项目页填 `/<仓库名>/`，用户主页留空）。
+2. 仓库 Settings → Secrets and variables → Actions：Secrets 加 `DEEPSEEK_API_KEY`。
 3. Settings → Pages → Source 选 **GitHub Actions**，推送触发。
+
+如果要让国内用户访问更稳定，推荐把构建产物同步到国内 OSS/COS 并挂 CDN。配置方式见 [docs/domestic-cdn-deploy.md](docs/domestic-cdn-deploy.md)。
 
 **本地手动生成**：
 
@@ -431,12 +433,22 @@ dark:border-*
 项目已内置 `.github/workflows/refresh.yml`，开箱即用：
 
 1. 仓库 Settings → Pages → Source 选 **GitHub Actions**。
-2. 配置 Secret `DEEPSEEK_API_KEY` 与 Variable `VITE_BASE`（项目页填 `/<仓库名>/`）。
+2. 配置 Secret `DEEPSEEK_API_KEY`。
 3. 推送到 `main`，或在 Actions 页面手动 `Run workflow`。
 
 之后每天 UTC 22:00（北京时间次日 06:00）自动重建，拉取最新 GitHub 数据并部署。详见 [docs/github-sync.md](docs/github-sync.md)。
 
 > `GITHUB_TOKEN` 由 Actions 自动注入，无需手动配置（读公开仓库足够）。
+
+### 国内 CDN 部署
+
+项目默认使用 Vite 相对资源路径 `./`，同一份 `dist` 可以部署到 GitHub Pages 项目页，也可以同步到国内 OSS/COS + CDN。
+
+完整配置见：
+
+```text
+docs/domestic-cdn-deploy.md
+```
 
 ---
 

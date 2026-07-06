@@ -9,7 +9,7 @@ export const portfolioData = {
     taglineEn: "Amplify speed with AI, turn ideas into running software.",
     subTagline: "我关注 AI 应用开发、Web 全栈项目和效率工具构建，喜欢借助 AI 编程工具快速完成原型设计、功能开发与项目落地。",
     subTaglineEn: "I focus on AI application development, Web full-stack projects, and building productivity tools. I enjoy leveraging AI programming systems to quickly complete prototyping, feature development, and deployment.",
-    resumeUrl: "/resume.html", // Links to printable elegant HTML resume
+    resumeUrl: `${import.meta.env.BASE_URL}resume.html`, // Links to printable elegant HTML resume
     email: "1123074811@qq.com",
     github: "https://github.com/1123074811",
     gitee: "https://gitee.com/1123074811",
