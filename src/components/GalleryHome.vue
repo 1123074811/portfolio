@@ -6,6 +6,7 @@ import { locale, toggleLocale } from '../data/locale'
 const info = personalInfo
 const activity = githubActivity
 const githubProfileSafe = githubProfile || { publicRepos: 0, followers: 0 }
+const resumePdfUrl = `${import.meta.env.BASE_URL}resume.pdf`
 const fmtDate = (s) => new Date(s).toLocaleDateString(locale.value === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 
 /* ── 多语言取值助手 ── */
@@ -268,6 +269,15 @@ onUnmounted(() => {
           <div class="ct-title">
             {{ locale === 'zh' ? '正在寻找 AI 应用 / 全栈 / 后端方向的实习机会' : 'Open to AI / Fullstack / Backend internships' }}
           </div>
+          <div class="ct-actions">
+            <a :href="resumePdfUrl" download="欧劲聪-简历.pdf" class="resume-download">
+              <span>{{ locale === 'zh' ? '下载 PDF 简历' : 'Download PDF Resume' }}</span>
+              <b>PDF</b>
+            </a>
+            <a :href="resumePdfUrl" target="_blank" class="resume-preview">
+              {{ locale === 'zh' ? '在线查看简历' : 'Preview resume' }}
+            </a>
+          </div>
           <div class="ct-links">
             <a :href="`mailto:${info.email}`"><span>EMAIL</span>{{ info.email }}</a>
             <a :href="info.github" target="_blank"><span>GITHUB</span>{{ info.github.replace('https://', '') }}</a>
@@ -416,6 +426,17 @@ onUnmounted(() => {
 .contact-card { width: min(460px, 92vw); background: #f4eee0; color: #1a1712; border-radius: 16px; padding: 34px 38px; text-align: center; }
 .contact-card .pc { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #b5612f; margin-bottom: 14px; }
 .contact-card .ct-title { font-family: var(--serif); font-size: 26px; font-weight: 600; margin-bottom: 22px; line-height: 1.2; }
+.contact-card .ct-actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 24px; align-items: center; }
+.resume-download {
+  min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 12px 16px 12px 18px; border-radius: 999px; background: #1a1712; color: #f4eee0;
+  text-decoration: none; box-shadow: 0 12px 28px rgba(26, 23, 18, .22); transition: transform .18s, box-shadow .18s;
+}
+.resume-download:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(26, 23, 18, .28); }
+.resume-download span { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: .01em; }
+.resume-download b { font-family: var(--mono); font-size: 11px; color: #1a1712; background: #f4eee0; padding: 5px 8px; border-radius: 999px; }
+.resume-preview { font-family: var(--mono); font-size: 11px; color: #b5612f; text-decoration: none; border-bottom: 1px solid rgba(181, 97, 47, .35); white-space: nowrap; }
+.resume-preview:hover { color: #8d431f; border-bottom-color: currentColor; }
 .contact-card .ct-links { font-family: var(--mono); font-size: 14px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
 .contact-card .ct-links a { color: #b5612f; display: flex; justify-content: space-between; text-decoration: none; }
 .contact-card .ct-links a span { color: #9b8f78; }
@@ -448,5 +469,7 @@ onUnmounted(() => {
 @media (max-width: 700px) {
   .overview-title { display: none; }
   .meta .ttl { font-size: 21px; }
+  .contact-card .ct-actions { grid-template-columns: 1fr; }
+  .resume-preview { justify-self: center; }
 }
 </style>
