@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: portfolio-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -38,6 +38,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       # 拉 GitHub 数据 + DeepSeek 生成文案 → src/data/githubData.json
       - name: Generate portfolio data from GitHub
         env:
@@ -59,6 +62,7 @@ jobs:
           path: dist
 
       - name: Upload static dist artifact
+        if: ${{ vars.DOMESTIC_DEPLOY_ENABLED == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: portfolio-dist
