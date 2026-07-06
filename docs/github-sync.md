@@ -12,9 +12,8 @@ GitHub Actions（每天 cron / push / 手动触发）
        3. 逐仓库取 README + languages + topics
        4. 增量缓存（仓库没变就不重复调 AI，省钱）
        5. DeepSeek 读 README → 生成中英 title/subtitle/description/highlights + 自动归类
-       6. 缓存 GitHub OpenGraph 封面到 public/github-covers（避免用户浏览器直连 GitHub 图片域名）
-       7. 汇总语言占比 / 最近活跃 / followers
-       8. 写出 src/data/githubData.json
+       6. 汇总语言占比 / 最近活跃 / followers
+       7. 写出 src/data/githubData.json
   └─ vite build → 部署到 GitHub Pages（备用）+ 可选同步国内 OSS/COS + CDN
 ```
 

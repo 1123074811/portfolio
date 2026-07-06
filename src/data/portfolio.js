@@ -13,24 +13,8 @@ import { portfolioData } from './portfolioData'
 import github from './githubData.json'
 
 const hasAuto = Array.isArray(github.projects) && github.projects.length > 0
-const withBase = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\.?\//, '')}`
-const resolveCover = (url) => {
-  if (!url || /^(https?:|data:|\/)/.test(url)) return url
-  return withBase(url)
-}
-const normalizeProjects = (items) => items.map((project) => ({
-  ...project,
-  coverImage: resolveCover(project.coverImage),
-  media: Array.isArray(project.media)
-    ? project.media.map((item) => ({
-        ...item,
-        url: resolveCover(item.url),
-        poster: resolveCover(item.poster),
-      }))
-    : project.media,
-}))
 
-export const projects = normalizeProjects(hasAuto ? github.projects : portfolioData.projects)
+export const projects = hasAuto ? github.projects : portfolioData.projects
 export const githubActivity = github.activity || null
 export const githubProfile = github.profile || null
 export const githubGeneratedAt = github.generatedAt || null

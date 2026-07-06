@@ -32,6 +32,7 @@ const WHEEL_GAIN = 0.12            // 滚轮力度
 const MAX_V = 48                   // 速度上限，防止甩飞
 const wrap = (v, p) => { v %= p; return v > 0 ? v - p : v } // 无缝循环：保持在 (-p, 0]
 const clamp = (v, m) => Math.max(-m, Math.min(m, v))
+const clearSelection = () => window.getSelection?.()?.removeAllRanges?.()
 
 /* mulberry32 洗牌（照搬 deck_index.html） */
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
@@ -104,6 +105,9 @@ function loop(t) {
 function onEnter() { drag.hovering = true }
 function onLeave() { drag.hovering = false; drag.dragging = false; if (stageRef.value) stageRef.value.style.cursor = 'grab' }
 function onDown(e) {
+  e.preventDefault()
+  e.currentTarget?.setPointerCapture?.(e.pointerId)
+  clearSelection()
   drag.dragging = true; drag.dragged = false
   vel.x = vel.y = 0 // 抓住即停
   lastPt = { x: e.clientX, y: e.clientY }; lastMove = { x: 0, y: 0 }
@@ -111,6 +115,7 @@ function onDown(e) {
 }
 function onMove(e) {
   if (!drag.dragging) return
+  clearSelection()
   const ddx = e.clientX - lastPt.x, ddy = e.clientY - lastPt.y
   lastPt = { x: e.clientX, y: e.clientY }
   lastMove = { x: ddx, y: ddy }
@@ -330,6 +335,11 @@ onUnmounted(() => {
   perspective: 2200px; perspective-origin: 50% 42%;
   background: radial-gradient(130% 120% at 50% 38%, #1b1610, #0a0805 82%);
   cursor: grab; touch-action: none; /* 支持拖拽平移 */
+}
+#ov-gallery, #ov-gallery * {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 .stage3d {
   --rx: 18; --rz: 9; position: absolute; inset: 0; transform-style: preserve-3d;
