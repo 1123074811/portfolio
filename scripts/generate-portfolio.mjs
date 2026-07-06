@@ -44,6 +44,53 @@ const LANG_COLOR = {
   SCSS: '#c6538c', Astro: '#ff5a03', Svelte: '#ff3e00',
 }
 
+function escapeXml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+}
+
+function svgCover(repo, copy, languages, hash) {
+  const lang = repo.language || Object.keys(languages)[0] || 'Code'
+  const accent = LANG_COLOR[lang] || '#4f46e5'
+  const title = escapeXml(copy.title || repo.name)
+  const subtitle = escapeXml(copy.subtitle || repo.description || lang)
+  const shortHash = escapeXml(hash.slice(0, 6).toUpperCase())
+  const stars = Number(repo.stargazers_count || 0)
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="52%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#18181b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="24%" r="60%">
+      <stop offset="0%" stop-color="${accent}" stop-opacity="0.9"/>
+      <stop offset="46%" stop-color="${accent}" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect width="1200" height="900" fill="url(#glow)"/>
+  <rect width="1200" height="900" fill="url(#grid)"/>
+  <circle cx="1000" cy="155" r="160" fill="${accent}" opacity="0.2"/>
+  <circle cx="1080" cy="720" r="240" fill="${accent}" opacity="0.12"/>
+  <path d="M160 690 C340 570 480 800 670 635 C820 505 900 555 1040 420" fill="none" stroke="${accent}" stroke-width="8" stroke-linecap="round" opacity="0.75"/>
+  <rect x="96" y="90" width="1008" height="720" rx="34" fill="#020617" opacity="0.58" stroke="#ffffff" stroke-opacity="0.12"/>
+  <text x="140" y="165" fill="${accent}" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28" font-weight="700">${escapeXml(lang)} / ${shortHash}</text>
+  <text x="140" y="395" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="76" font-weight="800">${title}</text>
+  <text x="144" y="475" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="500">${subtitle}</text>
+  <text x="144" y="705" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="26">github.com/${escapeXml(USER)}/${escapeXml(repo.name)}</text>
+  <text x="930" y="705" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="26" text-anchor="end">★ ${stars}</text>
+</svg>`
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
+}
+
 /* ───────── GitHub API ───────── */
 const ghHeaders = {
   'Accept': 'application/vnd.github+json',
@@ -180,7 +227,7 @@ async function main() {
       features: copy.features || [], featuresEn: copy.featuresEn || [],
       highlights: copy.highlights || [], highlightsEn: copy.highlightsEn || [],
       techStack: [...Object.keys(languages).slice(0, 4), ...topics.slice(0, 2)].filter(Boolean),
-      coverImage: `https://opengraph.githubassets.com/${hash}/${USER}/${repo.name}`,
+      coverImage: svgCover(repo, copy, languages, hash),
       demoUrl: repo.homepage || '#',
       sourceUrl: repo.html_url,
       status: repo.archived ? '已归档' : '持续迭代', statusEn: repo.archived ? 'Archived' : 'Active',
