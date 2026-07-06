@@ -28,6 +28,7 @@ const offset = { x: 0, y: 0 }      // 当前位移
 const vel = { x: 0, y: 0 }         // 用户惯性速度（滚轮/拖拽松手）
 let lastMove = { x: 0, y: 0 }      // 拖拽最近一帧位移（用于松手甩动）
 let vx = 0, vy = 0, raf = 0, lastT = 0, lastPt = { x: 0, y: 0 }
+let downCardIndex = null
 const FRICTION = 0.92              // 惯性摩擦：越大滑得越久
 const WHEEL_GAIN = 0.12            // 滚轮力度
 const MAX_V = 48                   // 速度上限，防止甩飞
@@ -78,9 +79,21 @@ function buildGallery() {
 const selected = ref(null)
 const showContact = ref(false)
 const showActivity = ref(false)
+const showWorks = ref(false)
 const cleanUrl = (u) => u && u !== '#' && u !== ''
 
-function onKey(e) { if (e.key === 'Escape') { selected.value = null; showContact.value = false; showActivity.value = false } }
+function openProject(project) {
+  selected.value = project
+  showWorks.value = false
+}
+function onKey(e) {
+  if (e.key === 'Escape') {
+    selected.value = null
+    showContact.value = false
+    showActivity.value = false
+    showWorks.value = false
+  }
+}
 let rT
 function onResize() { clearTimeout(rT); rT = setTimeout(buildGallery, 140) }
 
@@ -109,6 +122,7 @@ function onDown(e) {
   e.preventDefault()
   e.currentTarget?.setPointerCapture?.(e.pointerId)
   clearSelection()
+  downCardIndex = e.target?.closest?.('.card')?.dataset.projectIndex ?? null
   drag.dragging = true; drag.dragged = false
   vel.x = vel.y = 0 // 抓住即停
   lastPt = { x: e.clientX, y: e.clientY }; lastMove = { x: 0, y: 0 }
@@ -125,6 +139,11 @@ function onMove(e) {
 }
 function onUp() {
   if (drag.dragging) { vel.x = clamp(lastMove.x, MAX_V); vel.y = clamp(lastMove.y, MAX_V) } // 松手甩动
+  if (drag.dragging && !drag.dragged && downCardIndex !== null) {
+    const project = projects[Number(downCardIndex)]
+    if (project) openProject(project)
+  }
+  downCardIndex = null
   drag.dragging = false
   if (stageRef.value) stageRef.value.style.cursor = 'grab'
 }
@@ -185,7 +204,7 @@ onUnmounted(() => {
                 v-for="cell in cells"
                 :key="cell.key"
                 class="card"
-                @click="!drag.dragged && (selected = projects[cell.idx])"
+                :data-project-index="cell.idx"
               >
                 <div class="cover" :style="{ backgroundImage: `url('${projects[cell.idx].coverImage}')` }">
                   <span class="badge">{{ cat(projects[cell.idx]) }}</span>
@@ -224,9 +243,35 @@ onUnmounted(() => {
     <button class="left-cta" @click="showContact = true">
       {{ locale === 'zh' ? '联系我 · 下载简历' : 'Contact · Resume' }}
     </button>
-    <button class="start-btn" @click="selected = projects[0]">
+    <button class="start-btn" @click="showWorks = true">
       ▶ {{ locale === 'zh' ? '查看作品' : 'View Work' }}
     </button>
+
+    <!-- 作品列表弹层 -->
+    <Transition name="fade">
+      <div v-if="showWorks" class="modal" @click.self="showWorks = false">
+        <div class="works-panel">
+          <button class="x" @click="showWorks = false">×</button>
+          <div class="pc">{{ locale === 'zh' ? '全部作品' : 'All Works' }}</div>
+          <h2>{{ locale === 'zh' ? '作品列表' : 'Project Index' }}</h2>
+          <div class="works-list">
+            <button
+              v-for="(project, i) in projects"
+              :key="project.id || project.title"
+              class="work-row"
+              @click="openProject(project)"
+            >
+              <span class="work-no">{{ String(i + 1).padStart(2, '0') }}</span>
+              <span class="work-main">
+                <b>{{ shortName(project) }}</b>
+                <small>{{ cat(project) }} · {{ project.year }} · {{ sub(project) }}</small>
+              </span>
+              <span class="work-tech">{{ project.techStack.slice(0, 2).join(' / ') }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
 
     <!-- 项目详情弹层 -->
     <Transition name="fade">
@@ -423,6 +468,20 @@ onUnmounted(() => {
 .panel .x { position: absolute; top: 14px; right: 16px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .5); background: rgba(20, 16, 12, .4); backdrop-filter: blur(4px); color: #fff; font-size: 18px; cursor: pointer; line-height: 1; z-index: 3; }
 .panel .x:hover { background: rgba(20, 16, 12, .65); }
 
+.works-panel { position: relative; width: min(860px, 94vw); max-height: 86vh; overflow: auto; background: #f4eee0; color: #1a1712; border-radius: 16px; padding: 30px 34px 34px; box-shadow: 0 40px 100px rgba(0, 0, 0, .6); }
+.works-panel .x { position: absolute; top: 14px; right: 16px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d2c5ad; background: rgba(255, 255, 255, .45); color: #1a1712; font-size: 18px; cursor: pointer; line-height: 1; }
+.works-panel .x:hover { background: #eae0cc; }
+.works-panel .pc { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #b5612f; }
+.works-panel h2 { font-family: var(--serif); font-weight: 600; font-size: 34px; line-height: 1.04; letter-spacing: -.02em; margin: 8px 0 20px; }
+.works-list { display: flex; flex-direction: column; border-top: 1px solid #ddd1ba; }
+.work-row { width: 100%; display: grid; grid-template-columns: 54px minmax(0, 1fr) minmax(110px, auto); gap: 16px; align-items: center; padding: 15px 0; border: 0; border-bottom: 1px solid #ddd1ba; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.work-row:hover { background: linear-gradient(90deg, rgba(181, 97, 47, .1), transparent 72%); }
+.work-no { font-family: var(--mono); font-size: 12px; color: #b5612f; }
+.work-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.work-main b { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.05; color: #1a1712; }
+.work-main small { font-size: 13px; line-height: 1.35; color: #6b6354; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.work-tech { justify-self: end; max-width: 190px; font-family: var(--mono); font-size: 11px; color: #8b7f68; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .contact-card { width: min(460px, 92vw); background: #f4eee0; color: #1a1712; border-radius: 16px; padding: 34px 38px; text-align: center; }
 .contact-card .pc { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #b5612f; margin-bottom: 14px; }
 .contact-card .ct-title { font-family: var(--serif); font-size: 26px; font-weight: 600; margin-bottom: 22px; line-height: 1.2; }
@@ -469,6 +528,11 @@ onUnmounted(() => {
 @media (max-width: 700px) {
   .overview-title { display: none; }
   .meta .ttl { font-size: 21px; }
+  .works-panel { padding: 28px 22px 26px; }
+  .works-panel h2 { font-size: 30px; }
+  .work-row { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; }
+  .work-tech { display: none; }
+  .work-main b { font-size: 19px; }
   .contact-card .ct-actions { grid-template-columns: 1fr; }
   .resume-preview { justify-self: center; }
 }
