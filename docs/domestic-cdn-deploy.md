@@ -17,6 +17,7 @@ GitHub 仓库更新
 - 前端页面只读取构建后的静态文件，不会在用户浏览器里请求 GitHub API。
 - 国内用户访问 OSS/COS + CDN，比直接访问 GitHub Pages 更稳定。
 - `vite.config.js` 默认使用相对资源路径 `./`，同一份 `dist` 可同时用于 GitHub Pages 项目页和国内 CDN。
+- GitHub 仓库封面图会在 Actions 构建期缓存到 `public/github-covers/`，用户访问页面时从你的站点/CDN 加载图片，不再直连 GitHub 图片域名。
 
 ## GitHub Actions 配置
 

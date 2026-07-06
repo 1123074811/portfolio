@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T11:15:17.993Z",
+  "generatedAt": "2026-07-06T12:33:31.761Z",
   "username": "1123074811",
   "profile": {
     "name": "哈基聪",
@@ -57,18 +57,18 @@
         "stars": 1
       },
       {
-        "name": "AlgoViz",
-        "url": "https://github.com/1123074811/AlgoViz",
-        "pushedAt": "2026-06-17T15:52:46Z",
-        "language": "TypeScript",
+        "name": "portfolio",
+        "url": "https://github.com/1123074811/portfolio",
+        "pushedAt": "2026-07-06T12:23:41Z",
+        "language": "Vue",
         "description": "",
         "stars": 0
       },
       {
-        "name": "portfolio",
-        "url": "https://github.com/1123074811/portfolio",
-        "pushedAt": "2026-06-13T14:45:28Z",
-        "language": "Vue",
+        "name": "AlgoViz",
+        "url": "https://github.com/1123074811/AlgoViz",
+        "pushedAt": "2026-06-17T15:52:46Z",
+        "language": "TypeScript",
         "description": "",
         "stars": 0
       },
@@ -120,13 +120,44 @@
         "JavaScript",
         "Shell"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%2341b883%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%2341b883%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%2341b883%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%2341b883%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EVue%20%2F%2001%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Eblog-forum-system%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fblog-forum-system%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%201%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/blog-forum-system-4265d479aa4542fc.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/blog-forum-system",
       "status": "持续迭代",
       "statusEn": "Active",
       "year": "2026",
       "stars": 1,
+      "language": "Vue",
+      "topics": [],
+      "featured": true
+    },
+    {
+      "id": "portfolio",
+      "title": "portfolio",
+      "titleEn": "portfolio",
+      "subtitle": "一个开源项目",
+      "subtitleEn": "An open-source project",
+      "category": "Web 全栈",
+      "categoryEn": "Fullstack",
+      "description": "该项目的详细介绍待补充。",
+      "descriptionEn": "Description coming soon.",
+      "features": [],
+      "featuresEn": [],
+      "highlights": [],
+      "highlightsEn": [],
+      "techStack": [
+        "Vue",
+        "JavaScript",
+        "HTML",
+        "CSS"
+      ],
+      "coverImage": "github-covers/portfolio-b7d94d73f9626c99.png",
+      "demoUrl": "https://portfolio-green-zeta-30.vercel.app",
+      "sourceUrl": "https://github.com/1123074811/portfolio",
+      "status": "持续迭代",
+      "statusEn": "Active",
+      "year": "2026",
+      "stars": 0,
       "language": "Vue",
       "topics": [],
       "featured": true
@@ -151,7 +182,7 @@
         "JavaScript",
         "CSS"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%233178c6%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%233178c6%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%233178c6%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%233178c6%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3ETypeScript%20%2F%2002%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3EAlgoViz%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Falgoviz%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/algoviz-98b3c7151854adef.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/AlgoViz",
       "status": "持续迭代",
@@ -159,37 +190,6 @@
       "year": "2026",
       "stars": 0,
       "language": "TypeScript",
-      "topics": [],
-      "featured": true
-    },
-    {
-      "id": "portfolio",
-      "title": "portfolio",
-      "titleEn": "portfolio",
-      "subtitle": "一个开源项目",
-      "subtitleEn": "An open-source project",
-      "category": "Web 全栈",
-      "categoryEn": "Fullstack",
-      "description": "该项目的详细介绍待补充。",
-      "descriptionEn": "Description coming soon.",
-      "features": [],
-      "featuresEn": [],
-      "highlights": [],
-      "highlightsEn": [],
-      "techStack": [
-        "Vue",
-        "JavaScript",
-        "HTML",
-        "CSS"
-      ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2341b883%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%2341b883%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%2341b883%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%2341b883%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%2341b883%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EVue%20%2F%2003%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Eportfolio%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fportfolio%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
-      "demoUrl": "https://portfolio-green-zeta-30.vercel.app",
-      "sourceUrl": "https://github.com/1123074811/portfolio",
-      "status": "持续迭代",
-      "statusEn": "Active",
-      "year": "2026",
-      "stars": 0,
-      "language": "Vue",
       "topics": [],
       "featured": true
     },
@@ -213,7 +213,7 @@
         "JavaScript",
         "HTML"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%233178c6%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%233178c6%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%233178c6%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%233178c6%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3ETypeScript%20%2F%2004%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Edesk-pet%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fdesk-pet%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/desk-pet-6e512a7bd472a9a5.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/desk-pet",
       "status": "持续迭代",
@@ -241,7 +241,7 @@
       "techStack": [
         "TypeScript"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233178c6%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%233178c6%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%233178c6%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%233178c6%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%233178c6%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3ETypeScript%20%2F%2005%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3EPrompt-Management%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fprompt-management%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/prompt-management-9520f48502dad04d.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/Prompt-Management",
       "status": "持续迭代",
@@ -272,7 +272,7 @@
         "Vue",
         "TypeScript"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23b07219%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%23b07219%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23b07219%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%23b07219%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%23b07219%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%23b07219%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%23b07219%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EJava%20%2F%2006%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Exianguoji%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fxianguoji%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/xianguoji-1664346a2bf2a56f.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/xianguoji",
       "status": "持续迭代",
@@ -303,7 +303,7 @@
         "CSS",
         "HTML"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%233572A5%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%233572A5%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%233572A5%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%233572A5%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EPython%20%2F%2007%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Ellm-inspector%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fllm-inspector%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/llm-inspector-663684e73055bc1c.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/llm-inspector",
       "status": "持续迭代",
@@ -334,7 +334,7 @@
         "TypeScript",
         "PowerShell"
       ],
-      "coverImage": "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%22900%22%20viewBox%3D%220%200%201200%20900%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22%2F%3E%3Cstop%20offset%3D%2252%25%22%20stop-color%3D%22%23111827%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2318181b%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%2272%25%22%20cy%3D%2224%25%22%20r%3D%2260%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220.9%22%2F%3E%3Cstop%20offset%3D%2246%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233572A5%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22grid%22%20width%3D%2248%22%20height%3D%2248%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath%20d%3D%22M48%200H0v48%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.06%22%20stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23bg)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23glow)%22%2F%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22url(%23grid)%22%2F%3E%3Ccircle%20cx%3D%221000%22%20cy%3D%22155%22%20r%3D%22160%22%20fill%3D%22%233572A5%22%20opacity%3D%220.2%22%2F%3E%3Ccircle%20cx%3D%221080%22%20cy%3D%22720%22%20r%3D%22240%22%20fill%3D%22%233572A5%22%20opacity%3D%220.12%22%2F%3E%3Cpath%20d%3D%22M160%20690%20C340%20570%20480%20800%20670%20635%20C820%20505%20900%20555%201040%20420%22%20fill%3D%22none%22%20stroke%3D%22%233572A5%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2234%22%20fill%3D%22%23020617%22%20opacity%3D%220.58%22%20stroke%3D%22%23ffffff%22%20stroke-opacity%3D%220.12%22%2F%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%20fill%3D%22%233572A5%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EPython%20%2F%2008%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22395%22%20fill%3D%22%23f8fafc%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2276%22%20font-weight%3D%22800%22%3Ellm-inspector-test%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22475%22%20fill%3D%22%23cbd5e1%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22500%22%3E%E4%B8%80%E4%B8%AA%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%3C%2Ftext%3E%3Ctext%20x%3D%22144%22%20y%3D%22705%22%20fill%3D%22%2394a3b8%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%3Egithub.com%2F1123074811%2Fllm-inspector-test%3C%2Ftext%3E%3Ctext%20x%3D%22930%22%20y%3D%22705%22%20fill%3D%22%23e2e8f0%22%20font-family%3D%22Inter%2CSegoe%20UI%2CArial%2Csans-serif%22%20font-size%3D%2226%22%20text-anchor%3D%22end%22%3E%E2%98%85%200%3C%2Ftext%3E%3C%2Fsvg%3E",
+      "coverImage": "github-covers/llm-inspector-test-1d868d1e60e53f80.png",
       "demoUrl": "#",
       "sourceUrl": "https://github.com/1123074811/llm-inspector-test",
       "status": "持续迭代",
