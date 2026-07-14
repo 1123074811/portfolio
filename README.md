@@ -4,7 +4,7 @@
 
 > **两大新特性**
 > - 🎨 **双视觉主题，配置一键切换**：经典 Cyber 多分区版 ↔ 无限画廊作品墙（深暖底 3D 倾斜卡片墙）。改 `src/config/siteConfig.js` 一个字段即可整站换肤。
-> - 🤖 **GitHub 准实时自动同步**：GitHub Actions 定时拉取你的公开仓库 → DeepSeek 生成中英文案 → 自动更新项目卡片与「GitHub 动态」板块。详见 [docs/github-sync.md](docs/github-sync.md)。
+> - 🤖 **GitHub 自动同步（零跨仓配置）**：portfolio 每小时轮询公开仓库 → DeepSeek 生成中英文案 → 更新项目卡片与「GitHub 动态」。个别主推项目可再加可选即时通知。详见 [docs/github-sync.md](docs/github-sync.md)。
 
 ---
 
@@ -133,10 +133,12 @@ public/resume.html
 portfolio/
 ├── .github/
 │   └── workflows/
-│       └── refresh.yml                # CI：定时拉 GitHub 数据 + 构建 + 部署 Pages
+│       └── refresh.yml                # CI：每小时轮询 / push / 可选跨仓 dispatch
 ├── docs/
 │   ├── portfolio-requirements.md      # 项目需求与开发记录文档
-│   └── github-sync.md                 # GitHub 自动同步机制说明与启用步骤
+│   ├── github-sync.md                 # GitHub 自动同步说明（默认零跨仓配置）
+│   └── templates/
+│       └── notify-portfolio.yml       # 可选：个别源仓库即时通知作品集
 ├── scripts/
 │   └── generate-portfolio.mjs         # GitHub 拉取 + DeepSeek 文案生成器（零依赖）
 ├── public/
@@ -259,15 +261,20 @@ export const siteConfig = {
 
 ## GitHub 自动同步
 
-让作品集**准实时**反映 GitHub：GitHub Actions 定时拉取公开仓库 → DeepSeek 生成中英文案 → 自动更新项目卡片与「GitHub 动态」板块（语言占比 / 最近活跃 / followers / star）。
+让作品集自动反映 GitHub：**默认只配 portfolio 一个仓库**。每小时轮询公开仓库 → DeepSeek 生成中英文案 → 更新项目卡片与「GitHub 动态」。  
+跨仓即时通知是可选增强，不需要给每个仓库都配文件。
 
 **数据流**：
 
 ```
-GitHub Actions（每天 cron / push / 手动）
-  └─ scripts/generate-portfolio.mjs
-        拉仓库 → 智能筛选 → DeepSeek 写中英文案（增量缓存省钱）→ src/data/githubData.json
-  └─ vite build → 部署 GitHub Pages（备用）+ 可选同步国内 OSS/COS + CDN
+默认（零跨仓配置）
+  portfolio Actions（每小时 cron / push / 手动）
+    └─ scripts/generate-portfolio.mjs
+          拉仓库 → 智能筛选 → DeepSeek 写中英文案（增量缓存省钱）→ src/data/githubData.json
+    └─ vite build → 部署 GitHub Pages + 可选国内 OSS/COS + CDN
+
+可选（个别主推项目）
+  源仓库 notify-portfolio.yml → repository_dispatch → portfolio 立刻重建
 ```
 
 **数据合并**（`src/data/portfolio.js`）：GitHub 自动数据优先，没有则回退手填的 `portfolioData.js`；技能 / 履历 / 求职意向等始终手填。任何阶段网站都能正常渲染。
@@ -276,7 +283,9 @@ GitHub Actions（每天 cron / push / 手动）
 
 1. `src/config/siteConfig.js` → `github.username` 填**真实 GitHub 登录名**（主页 URL `github.com/<这里>` 的那段，只能英文/数字/连字符）。
 2. 仓库 Settings → Secrets and variables → Actions：Secrets 加 `DEEPSEEK_API_KEY`。
-3. Settings → Pages → Source 选 **GitHub Actions**，推送触发。
+3. Settings → Pages → Source 选 **GitHub Actions**，推送即可。之后每小时自动同步全部公开仓库。
+
+可选：若某个主推项目要“一 push 就更新”，再按文档给该仓库加 `notify-portfolio.yml`。
 
 如果要让国内用户访问更稳定，推荐把构建产物同步到国内 OSS/COS 并挂 CDN。配置方式见 [docs/domestic-cdn-deploy.md](docs/domestic-cdn-deploy.md)。
 
@@ -436,7 +445,10 @@ dark:border-*
 2. 配置 Secret `DEEPSEEK_API_KEY`。
 3. 推送到 `main`，或在 Actions 页面手动 `Run workflow`。
 
-之后每天 UTC 22:00（北京时间次日 06:00）自动重建，拉取最新 GitHub 数据并部署。详见 [docs/github-sync.md](docs/github-sync.md)。
+之后**每小时自动轮询**你的公开仓库并重建部署，无需给其他仓库加文件。  
+若个别项目要即时刷新，再按 [docs/github-sync.md](docs/github-sync.md) 可选配置 notify 模板。
+
+触发源：每小时 cron（主） / portfolio 自己 push / 手动 / 可选 `repository_dispatch`。
 
 > `GITHUB_TOKEN` 由 Actions 自动注入，无需手动配置（读公开仓库足够）。
 

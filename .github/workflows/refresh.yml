@@ -1,12 +1,19 @@
 name: Refresh & Deploy Portfolio
 
-# 准实时：每天 UTC 22:00（北京时间次日 6:00）自动重建；也可手动触发 / push 触发
+# 触发来源（推荐以高频轮询为主，跨仓 notify 仅可选）：
+# 1) schedule：每小时轮询一次 GitHub 公开仓库（零跨仓配置）
+# 2) push：portfolio 自身 main 更新
+# 3) workflow_dispatch：手动触发
+# 4) repository_dispatch：可选。仅当个别源仓库复制了 notify 模板时即时回调
 on:
   schedule:
-    - cron: '0 22 * * *'
+    # 每小时一次。GitHub cron 可能有几分钟延迟，但不需要给每个仓库配文件
+    - cron: '0 * * * *'
   push:
     branches: [main]
   workflow_dispatch:
+  repository_dispatch:
+    types: [repo-updated, portfolio-refresh]
 
 permissions:
   contents: read
@@ -15,12 +22,23 @@ permissions:
 
 concurrency:
   group: portfolio-deploy
-  cancel-in-progress: false
+  # 高频轮询或多次通知时只保留最新一次部署，避免排队堆积
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Show trigger context
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "event_type=${{ github.event.action || github.event_name }}"
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "source_repo=${{ github.event.client_payload.source_repo }}"
+            echo "source_ref=${{ github.event.client_payload.ref }}"
+            echo "source_sha=${{ github.event.client_payload.sha }}"
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4

@@ -17,7 +17,7 @@ export const siteConfig = {
   /**
    * GitHub 自动同步配置
    * ───────────────────────────────────────────────
-   * 由 scripts/generate-portfolio.mjs（在 GitHub Actions 里定时跑）读取，
+   * 由 scripts/generate-portfolio.mjs（GitHub Actions：每小时轮询 / push / 可选跨仓 dispatch）读取，
    * 拉取你的公开仓库 → DeepSeek 生成文案 → 写入 src/data/githubData.json。
    */
   github: {

@@ -3,8 +3,8 @@
 本项目的推荐生产链路：
 
 ```text
-GitHub 仓库更新
-  -> GitHub Actions 每天/手动运行 generate-portfolio.mjs
+GitHub 仓库更新（portfolio 每小时轮询 / push / 手动 / 可选跨仓 dispatch）
+  -> GitHub Actions 运行 generate-portfolio.mjs
   -> 生成 src/data/githubData.json
   -> vite build
   -> 部署 dist 到国内 OSS/COS + CDN
