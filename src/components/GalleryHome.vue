@@ -23,18 +23,24 @@ const gridStyle = ref({})
 const DRIFT_SEC = 90
 
 /* 鼠标控制 + 自动漂移共享状态 */
-const drag = { hovering: false, dragging: false, dragged: false, dx: 1, dy: 1 }
+// pending=按下未移动；dragging=已超过阈值进入拖拽。默认不进抓取模式，避免挡卡片点击
+const drag = { hovering: false, pending: false, dragging: false, dragged: false, dx: 1, dy: 1 }
 const offset = { x: 0, y: 0 }      // 当前位移
 const vel = { x: 0, y: 0 }         // 用户惯性速度（滚轮/拖拽松手）
 let lastMove = { x: 0, y: 0 }      // 拖拽最近一帧位移（用于松手甩动）
 let vx = 0, vy = 0, raf = 0, lastT = 0, lastPt = { x: 0, y: 0 }
+let startPt = { x: 0, y: 0 }
 let downCardIndex = null
 const FRICTION = 0.92              // 惯性摩擦：越大滑得越久
 const WHEEL_GAIN = 0.12            // 滚轮力度
 const MAX_V = 48                   // 速度上限，防止甩飞
+const DRAG_THRESHOLD = 6           // 超过该像素才算拖拽，否则当点击
 const wrap = (v, p) => { v %= p; return v > 0 ? v - p : v } // 无缝循环：保持在 (-p, 0]
 const clamp = (v, m) => Math.max(-m, Math.min(m, v))
 const clearSelection = () => window.getSelection?.()?.removeAllRanges?.()
+const setStageCursor = (value) => {
+  if (stageRef.value) stageRef.value.style.cursor = value
+}
 
 /* mulberry32 洗牌（照搬 deck_index.html） */
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
@@ -102,8 +108,8 @@ function loop(t) {
   const dt = lastT ? Math.min((t - lastT) / 1000, 0.05) : 0
   lastT = t
   const idle = Math.abs(vel.x) < 0.05 && Math.abs(vel.y) < 0.05
-  // 自动漂移：鼠标不在画廊、未拖拽、且无惯性时
-  if (!drag.hovering && !drag.dragging && idle) { offset.x -= vx * dt; offset.y -= vy * dt }
+  // 自动漂移：鼠标不在画廊、未按住/拖拽、且无惯性时
+  if (!drag.hovering && !drag.pending && !drag.dragging && idle) { offset.x -= vx * dt; offset.y -= vy * dt }
   // 用户惯性：滚轮/拖拽松手后带摩擦地滑行（把离散滚轮变连续）
   if (!drag.dragging) {
     offset.x += vel.x; offset.y += vel.y
@@ -117,35 +123,59 @@ function loop(t) {
   raf = requestAnimationFrame(loop)
 }
 function onEnter() { drag.hovering = true }
-function onLeave() { drag.hovering = false; drag.dragging = false; if (stageRef.value) stageRef.value.style.cursor = 'grab' }
+function onLeave() {
+  // 只标记离开；真正拖拽时 pointer capture 仍由 onUp 收尾，避免误取消
+  drag.hovering = false
+}
 function onDown(e) {
+  // 浮层按钮在 stage 外；stage 内仅处理画廊平移与卡片点击
   e.preventDefault()
   e.currentTarget?.setPointerCapture?.(e.pointerId)
   clearSelection()
   downCardIndex = e.target?.closest?.('.card')?.dataset.projectIndex ?? null
-  drag.dragging = true; drag.dragged = false
-  vel.x = vel.y = 0 // 抓住即停
-  lastPt = { x: e.clientX, y: e.clientY }; lastMove = { x: 0, y: 0 }
-  if (stageRef.value) stageRef.value.style.cursor = 'grabbing'
+  drag.pending = true
+  drag.dragging = false
+  drag.dragged = false
+  vel.x = vel.y = 0 // 按住即停惯性
+  startPt = lastPt = { x: e.clientX, y: e.clientY }
+  lastMove = { x: 0, y: 0 }
+  // 按下尚未移动：保持 default/pointer，不进 grab
 }
 function onMove(e) {
-  if (!drag.dragging) return
+  if (!drag.pending && !drag.dragging) return
   clearSelection()
-  const ddx = e.clientX - lastPt.x, ddy = e.clientY - lastPt.y
+  const ddx = e.clientX - lastPt.x
+  const ddy = e.clientY - lastPt.y
+
+  // 未超过阈值前不当拖拽，保证卡片可点
+  if (!drag.dragging) {
+    const dist = Math.hypot(e.clientX - startPt.x, e.clientY - startPt.y)
+    if (dist <= DRAG_THRESHOLD) return
+    drag.dragging = true
+    drag.dragged = true
+    setStageCursor('grabbing')
+  }
+
   lastPt = { x: e.clientX, y: e.clientY }
   lastMove = { x: ddx, y: ddy }
-  if (Math.abs(ddx) + Math.abs(ddy) > 4) drag.dragged = true // 区分拖拽与点击
-  offset.x += ddx; offset.y += ddy // 拖拽 1:1 直接跟手
+  offset.x += ddx
+  offset.y += ddy
 }
 function onUp() {
-  if (drag.dragging) { vel.x = clamp(lastMove.x, MAX_V); vel.y = clamp(lastMove.y, MAX_V) } // 松手甩动
-  if (drag.dragging && !drag.dragged && downCardIndex !== null) {
+  if (drag.dragging) {
+    vel.x = clamp(lastMove.x, MAX_V)
+    vel.y = clamp(lastMove.y, MAX_V)
+  }
+  // 仅“按下未拖动”时打开卡片，避免拖拽误触
+  if (drag.pending && !drag.dragged && downCardIndex !== null) {
     const project = projects[Number(downCardIndex)]
     if (project) openProject(project)
   }
   downCardIndex = null
+  drag.pending = false
   drag.dragging = false
-  if (stageRef.value) stageRef.value.style.cursor = 'grab'
+  drag.dragged = false
+  setStageCursor('')
 }
 function onWheel(e) {
   e.preventDefault(); drag.hovering = true
@@ -231,7 +261,7 @@ onUnmounted(() => {
       <div class="nm">Vibe<b>Coder</b> · {{ info.englishName }}</div>
       <div class="rl">{{ locale === 'zh' ? info.title : info.titleEn }}</div>
     </div>
-    <div class="overview-title">Infinite Gallery · {{ locale === 'zh' ? '拖拽平移 · 滚轮滚动 · 点击查看详情' : 'Drag · Scroll · Click any card' }}</div>
+    <div class="overview-title">Infinite Gallery · {{ locale === 'zh' ? '点击查看 · 按住拖拽 · 滚轮滚动' : 'Click · Drag · Scroll' }}</div>
     <div class="corner-meta">
       {{ projects.length.toString().padStart(2, '0') }} PROJECTS · 2024—2026<br />READY FOR INTERVIEW
     </div>
@@ -389,7 +419,8 @@ onUnmounted(() => {
   position: absolute; inset: 0; overflow: hidden;
   perspective: 2200px; perspective-origin: 50% 42%;
   background: radial-gradient(130% 120% at 50% 38%, #1b1610, #0a0805 82%);
-  cursor: grab; touch-action: none; /* 支持拖拽平移 */
+  cursor: default; /* 默认可点；仅实际拖拽时由 JS 切到 grabbing */
+  touch-action: none;
 }
 #ov-gallery, #ov-gallery * {
   user-select: none;
@@ -407,7 +438,8 @@ onUnmounted(() => {
 
 .card {
   position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 9px; overflow: hidden;
-  background: #f4eee0; cursor: pointer; transform-style: preserve-3d; will-change: transform;
+  background: #f4eee0; cursor: pointer; pointer-events: auto;
+  transform-style: preserve-3d; will-change: transform;
   display: flex; flex-direction: column;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .42), 0 3px 9px rgba(0, 0, 0, .3);
   transition: transform .34s cubic-bezier(.2, .7, .2, 1), box-shadow .34s;
