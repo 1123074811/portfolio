@@ -29,7 +29,7 @@ export const siteConfig = {
       excludeForks: true,        // 排除 fork 的仓库
       excludeArchived: true,     // 排除已归档仓库
       requireDescriptionOrReadme: true, // 必须有描述或 README
-      maxProjects: 9,            // 最多生成多少个项目卡片（按 star + 活跃度排序取前 N）
+      maxProjects: Infinity,     // 不限制生成项目数量（按 star + 活跃度排序全部纳入）
       // 只生成打了这些 topic 的仓库（留空数组 = 不限制，走智能排序）
       includeTopics: [],
       // 强制排除的仓库名
