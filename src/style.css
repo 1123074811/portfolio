@@ -4,7 +4,19 @@
 
 @layer base {
   body {
-    @apply selection:bg-cyber-violet/30 selection:text-cyber-violet dark:selection:text-cyber-cyan;
+    @apply selection:text-[#b5612f] dark:selection:text-[#e08a5b];
+  }
+
+  ::selection {
+    background: transparent;
+    text-decoration: underline;
+    text-decoration-color: #b5612f;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  .dark ::selection {
+    text-decoration-color: #e08a5b;
   }
   
   /* Smooth scrolling for anchor links */
